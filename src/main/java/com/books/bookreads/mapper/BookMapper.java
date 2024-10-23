@@ -3,6 +3,8 @@ package com.books.bookreads.mapper;
 import com.books.bookreads.model.Book;
 import com.books.bookreads.model.Reader;
 import com.books.bookreads.model.dtos.BookDto;
+import com.books.bookreads.model.dtos.BookDtoRequest;
+import com.books.bookreads.model.enums.BookStatus;
 import com.books.bookreads.model.enums.Genre;
 import com.books.bookreads.repository.ReaderRepository;
 import org.springframework.stereotype.Component;
@@ -29,7 +31,9 @@ public class BookMapper {
                 book.getRating(),
                 book.getStars(),
                 book.getPoints(),
+                book.getReadDate(),
                 book.getGenre().name(),
+                book.getStatus().name(),
                 book.getCoverUrl(),
                 book.getNote(),
                 book.getReader() != null ? readerMapper.toReaderDto(book.getReader()) : null
@@ -63,7 +67,9 @@ public class BookMapper {
         book.setRating(bookDto.getRating());
         book.setStars(bookDto.getStars());
         book.setPoints(bookDto.getPoints());
+        book.setReadDate(bookDto.getReadDate());
         book.setGenre(Genre.valueOf(bookDto.getGenre()));
+        book.setStatus(BookStatus.valueOf(bookDto.getStatus()));
         book.setCoverUrl(bookDto.getCoverUrl());
         book.setNote(bookDto.getNote());
     }
@@ -74,5 +80,21 @@ public class BookMapper {
                     .orElseThrow(() -> new IllegalArgumentException("Reader not found"));
             book.setReader(reader);
         }
+    }
+
+    public BookDto toBookDto(BookDtoRequest request) {
+        BookDto bookDto = new BookDto();
+        bookDto.setTitle(request.getTitle());
+        bookDto.setAuthor(request.getAuthor());
+        bookDto.setLanguage(request.getLanguage());
+        bookDto.setRating(request.getRating());
+        bookDto.setStars(request.getStars());
+        bookDto.setPoints(request.getPoints());
+        bookDto.setReadDate(request.getReadDate());
+        bookDto.setGenre(request.getGenre());
+        bookDto.setStatus(request.getStatus());
+        bookDto.setCoverUrl(request.getCover());
+        bookDto.setNote(request.getNote());
+        return bookDto;
     }
 }

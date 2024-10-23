@@ -17,7 +17,9 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-    private static final String SECRET_KET = "ee6277bb5b4c27b2b017ecfd5c017e7e8dbb5ecd9931d36de8b0ac9ae7272ba0";
+    private static final String SECRET_KEY = "ee6277bb5b4c27b2b017ecfd5c017e7e8dbb5ecd9931d36de8b0ac9ae7272ba0";
+    private static final long JWT_EXPIRATION = 1000 * 60 * 60;
+
     public String extractUsername(String jwtToken) {
         return extractClaim(jwtToken, Claims::getSubject);
     }
@@ -31,13 +33,12 @@ public class JWTService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    public String generateToken(Map<String,Object> extraClaims, UserDetails userDetails){
-        return Jwts
-                .builder()
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -45,6 +46,10 @@ public class JWTService {
     public boolean isTokenValid(String jwtToken, UserDetails userDetails){
         final String username = extractUsername(jwtToken);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(jwtToken);
+    }
+
+    public boolean isTokenValid(String jwtToken) {
+        return !isTokenExpired(jwtToken);
     }
 
     private boolean isTokenExpired(String jwtToken) {
@@ -65,7 +70,7 @@ public class JWTService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KET);
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

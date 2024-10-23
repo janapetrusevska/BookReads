@@ -1,10 +1,13 @@
 package com.books.bookreads.model;
 
 import com.books.bookreads.model.dtos.BookDto;
+import com.books.bookreads.model.enums.BookStatus;
 import com.books.bookreads.model.enums.Genre;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.BeanUtils;
+
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -23,9 +26,13 @@ public class Book {
     private double rating;
     private double stars;
     private double points;
+    private LocalDate readDate;
 
     @Enumerated(EnumType.STRING)
     private Genre genre;
+    @Enumerated(EnumType.STRING)
+    private BookStatus status;
+
     @Lob
     @Column
     private String coverUrl;

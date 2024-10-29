@@ -25,6 +25,7 @@ public class BookMapper {
         }
 
         return new BookDto(
+                book.getId(),
                 book.getTitle(),
                 book.getAuthor(),
                 book.getLanguage(),
@@ -56,22 +57,41 @@ public class BookMapper {
             return;
         }
 
-        setEntityValuesFromDto(bookDto, book);
-        setReaderFromDto(bookDto, book);
-    }
+        if (bookDto.getTitle() != null) {
+            book.setTitle(bookDto.getTitle());
+        }
+        if (bookDto.getAuthor() != null) {
+            book.setAuthor(bookDto.getAuthor());
+        }
+        if (bookDto.getLanguage() != null) {
+            book.setLanguage(bookDto.getLanguage());
+        }
+        if (bookDto.getRating() != 0) {
+            book.setRating(bookDto.getRating());
+        }
+        if (bookDto.getStars() != 0) {
+            book.setStars(bookDto.getStars());
+        }
+        if (bookDto.getPoints() != 0) {
+            book.setPoints(bookDto.getPoints());
+        }
+        if (bookDto.getReadDate() != null) {
+            book.setReadDate(bookDto.getReadDate());
+        }
+        if (bookDto.getGenre() != null) {
+            book.setGenre(Genre.valueOf(bookDto.getGenre()));
+        }
+        if (bookDto.getStatus() != null) {
+            book.setStatus(BookStatus.valueOf(bookDto.getStatus()));
+        }
+        if (bookDto.getCoverUrl() != null) {
+            book.setCoverUrl(bookDto.getCoverUrl());
+        }
+        if (bookDto.getNote() != null) {
+            book.setNote(bookDto.getNote());
+        }
 
-    private void setEntityValuesFromDto(BookDto bookDto, Book book) {
-        book.setTitle(bookDto.getTitle());
-        book.setAuthor(bookDto.getAuthor());
-        book.setLanguage(bookDto.getLanguage());
-        book.setRating(bookDto.getRating());
-        book.setStars(bookDto.getStars());
-        book.setPoints(bookDto.getPoints());
-        book.setReadDate(bookDto.getReadDate());
-        book.setGenre(Genre.valueOf(bookDto.getGenre()));
-        book.setStatus(BookStatus.valueOf(bookDto.getStatus()));
-        book.setCoverUrl(bookDto.getCoverUrl());
-        book.setNote(bookDto.getNote());
+        setReaderFromDto(bookDto, book);
     }
 
     private void setReaderFromDto(BookDto bookDto, Book book) {

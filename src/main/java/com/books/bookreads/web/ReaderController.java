@@ -23,7 +23,8 @@ public class ReaderController {
         if (jwtToken != null && jwtToken.startsWith("Bearer ")) {
             jwtToken = jwtToken.substring(7);
             if (jwtService.isTokenValid(jwtToken) && jwtService.extractUsername(jwtToken).equals(email)) {
-                return ResponseEntity.ok(readerService.findByEmail(email));
+                Reader reader = readerService.findByEmail(email);
+                return ResponseEntity.ok(reader);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }

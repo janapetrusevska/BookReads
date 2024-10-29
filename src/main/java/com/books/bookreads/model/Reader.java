@@ -29,7 +29,7 @@ public class Reader implements UserDetails {
     private int totalPoints;
     private int level = 1;
 
-    @OneToMany(mappedBy = "reader", cascade = CascadeType.ALL)
+    @Transient
     private List<Book> booksRead;
 
     @Enumerated(EnumType.STRING)
@@ -66,4 +66,5 @@ public class Reader implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

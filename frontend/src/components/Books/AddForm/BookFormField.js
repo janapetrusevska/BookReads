@@ -1,11 +1,11 @@
 import React from "react";
 
-const FormField = ({ label, name, type, required, options, onChange }) => {
+const FormField = ({ label, name, type, options, onChange, value }) => {
     if (type === "select") {
         return (
             <div className="form-field-add">
                 <label>{label}</label>
-                <select name={name} required onChange={onChange}>
+                <select name={name} value={value} required onChange={onChange}>
                     <option value="">Select a {label.toLowerCase()}</option>
                     {options.map((option, index) => (
                         <option key={index} value={option}>
@@ -21,7 +21,7 @@ const FormField = ({ label, name, type, required, options, onChange }) => {
         return (
             <div className="form-field-add">
                 <label>{label}</label>
-                <textarea name={name} rows="7" cols="37" required onChange={onChange}/>
+                <textarea name={name} value={value} rows="5" cols="37" onChange={onChange}/>
             </div>
         );
     }
@@ -35,7 +35,6 @@ const FormField = ({ label, name, type, required, options, onChange }) => {
                     name={name}
                     accept="image/*"
                     onChange={onChange}
-                    required
                 />
             </div>
         );
@@ -47,8 +46,8 @@ const FormField = ({ label, name, type, required, options, onChange }) => {
             <input
                 type={type}
                 name={name}
-                required={required}
-                onChange={onChange}/>
+                onChange={onChange}
+                value={value}/>
         </div>
     );
 };

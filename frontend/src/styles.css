@@ -80,6 +80,8 @@ body {
 }
 
 .form-button {
+    display: flex;
+    justify-content: center;
     color: white;
     background-color: #4C1968;
     border: 1px solid #4C1968;
@@ -188,7 +190,7 @@ body {
     background-color: #f4f4f4;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 50%;
+    width: 45%;
     height: 80%;
     display: flex;
     flex-direction: column;
@@ -204,20 +206,32 @@ body {
 .modal-top-bar button {
     width: 30px;
     height: 30px;
-    margin-left:530px;
+    margin-left:490px;
 }
 
 .form-input-field{
     padding: 5px;
 }
 
-.left-column{
-    float:left;
-    margin: 0 40px;
+.modal-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.left-column,
+.right-column {
+    flex: 1;
+    min-width: 300px;
+    margin: 10px 15px;
 }
 
 .right-column{
-    float:right;
+    margin-left: 20px;
 }
 
 .form-field-add{
@@ -233,4 +247,217 @@ body {
     border: 1px solid black;
     border-radius: 6px;
     font-size: 16px;
+}
+
+.cover-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/*.toggle-button {*/
+/*    padding: 8px 12px;*/
+/*    margin: 15px 10px;*/
+/*    background-color: #4C1968;*/
+/*    width: 80%;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    border-radius: 4px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*Toggle Button*/
+.toggle-switch {
+    margin-left: 10px;
+    position: relative;
+    width: 300px;
+    display: inline-block;
+    vertical-align: middle;
+    user-select: none;
+    text-align: left;
+}
+
+.toggle-switch-checkbox {
+    display: none;
+}
+
+.toggle-switch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 0 solid #bbb;
+    border-radius: 20px;
+    margin: 0;
+}
+
+.toggle-switch-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+
+.toggle-switch-inner:before,
+.toggle-switch-inner:after {
+    display: block;
+    float: left;
+    width: 50%;
+    height: 34px;
+    padding: 0;
+    line-height: 34px;
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.toggle-switch-inner:before {
+    content: "Switch to upload file";
+    text-transform: uppercase;
+    padding-left: 10px;
+    background-color: #884CA0;
+    color: #fff;
+}
+
+.toggle-switch-inner:after {
+    content: "Switch to add cover URL";
+    text-transform: uppercase;
+    padding-right: 10px;
+    background-color: #bbb;
+    color: #fff;
+    text-align: right;
+}
+
+.toggle-switch-switch {
+    display: block;
+    width: 90px;
+    margin: 5px;
+    background: #fff;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 66%;
+    border: 0 solid #bbb;
+    border-radius: 20px;
+    transition: all 0.3s ease-in 0s;
+}
+
+.toggle-switch-disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.toggle-switch-disabled:before {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-inner {
+    margin-left: 0;
+}
+
+.toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-switch {
+    right: 0px;
+}
+
+/*Details Book View*/
+.details-book-cover{
+    width: 250px;
+    height: 350px;
+}
+
+.book-details{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.speechbubble {
+    background-color: #26272b;
+    color: #9fa2a7;
+    font-size: .8em;
+    line-height: 1.75;
+    padding: 15px 25px;
+    margin-bottom: 75px;
+    cursor: default;
+}
+
+.speechbubble:nth-child(2n) {
+    border-left: 5px solid;
+}
+
+.speechbubble:nth-child(2n):after {
+    content: '';
+    margin-top: -30px;
+    padding-top: 0px;
+    position: relative;
+    bottom: -45px;
+    left: 20px;
+    border-width: 30px 0 0 30px;
+    border-style: solid;
+    border-color: #26272b transparent;
+    display: block;
+    width: 0;
+}
+
+.speechbubble:nth-child(2n + 1) {
+    border-right: 5px solid;
+}
+
+.speechbubble:nth-child(2n + 1):after {
+    content: '';
+    margin-top: -30px;
+    padding-top: 0px;
+    position: relative;
+    bottom: -45px;
+    left: 350px;
+    border-width: 30px 30px 0 0;
+    border-style: solid;
+    border-color: #26272b transparent;
+    display: block;
+    width: 0;
+}
+
+.speechbubble:nth-child(4n + 1) {
+    border-color: #56b273;
+}
+
+.speechbubble:nth-child(4n + 2) {
+    border-color: #01AD9B;
+}
+
+.speechbubble:nth-child(4n + 3) {
+    border-color: #b388dd;
+}
+
+.speechbubble:nth-child(4n + 4) {
+    border-color: #ff8750;
+}
+
+.speechbubble p:before {
+    content: "“";
+    font-family: Georgia;
+    font-size: 40px;
+    line-height: 0;
+    display: inline-block;
+}
+
+.username {
+    display: inline;
+    font-style: italic;
+    float: right;
+}
+
+.username:before {
+    content: '- ';
+}
+
+.button-container{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }

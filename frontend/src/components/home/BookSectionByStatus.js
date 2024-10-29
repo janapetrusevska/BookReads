@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import BookCard from "../Books/BookCard";
 
-const HomeSection = ({title, status, onAddBook}) => {
+const BookSectionByStatus = ({ title, status, onAddBook, onViewDetails }) => {
     const [books, setBooks] = useState([]);
     const token = localStorage.getItem("token");
 
     useEffect(() => {
         const fetchBooks = async () => {
-            if(token){
+            if (token) {
                 try {
                     const response = await axios.get(`http://localhost:8080/api/books/status/${status}`, {
                         headers: {
@@ -22,7 +23,7 @@ const HomeSection = ({title, status, onAddBook}) => {
             }
         };
         fetchBooks();
-    }, []);
+    }, [status, token]);
 
     return (
         <div>
@@ -30,11 +31,10 @@ const HomeSection = ({title, status, onAddBook}) => {
                 <h3>{title}</h3>
                 <ul className="book-list">
                     {books.map(book => (
-                        <div className="book-card">
-                            <img src={book.coverUrl} alt="photo" className="home-book-cover"/>
-                            <li key={`${book.id}-${book.title}`}><b><i>{book.title}</i></b></li>
-                            <p>{book.author}</p>
-                        </div>
+                        <BookCard
+                            key={book.id}
+                            book={book}
+                            onViewDetails={() => onViewDetails(book)}/>
                     ))}
                     <div className="add-book-card" onClick={onAddBook}>
                         <h1>+</h1>
@@ -45,4 +45,4 @@ const HomeSection = ({title, status, onAddBook}) => {
     );
 };
 
-export default HomeSection;
+export default BookSectionByStatus;

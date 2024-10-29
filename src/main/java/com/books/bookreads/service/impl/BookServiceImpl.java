@@ -1,5 +1,6 @@
 package com.books.bookreads.service.impl;
 
+import com.books.bookreads.config.JWTService;
 import com.books.bookreads.mapper.BookMapper;
 import com.books.bookreads.model.Book;
 import com.books.bookreads.model.Reader;
@@ -29,12 +30,14 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
     private final ReaderService readerService;
     private final ServletContext servletContext;
+    private final JWTService jwtService;
 
-    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper, ReaderService readerService, ServletContext servletContext) {
+    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper, ReaderService readerService, ServletContext servletContext, JWTService jwtService) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
         this.readerService = readerService;
         this.servletContext = servletContext;
+        this.jwtService = jwtService;
     }
 
     public List<BookDto> findAll() {
@@ -51,8 +54,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> getBooksByStatus(BookStatus status) {
-        return bookRepository.findByStatus(status).stream()
+    public List<BookDto> getBooksByStatusAndReader(BookStatus status, String token) {
+        String jwtToken = token.substring(7).trim();
+        String email = jwtService.extractUsername(jwtToken);
+        Reader reader = readerService.findByEmail(email);
+
+        return bookRepository.findByStatusAndReader(status, reader).stream()
                 .map(bookMapper::toBookDto)
                 .collect(Collectors.toList());
     }
@@ -77,15 +84,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto updateBook(Long bookId, BookDto bookDto, String jwtToken) {
+    public BookDto updateBook(Long bookId, BookDtoRequest request, String coverPath, String jwtToken) {
         Reader reader = readerService.getReaderFromToken(jwtToken);
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found,"));
 
-        int pointsDifference = (int) bookDto.getPoints() - (int) book.getPoints();
-        readerService.updateReaderPointsAndLevel(reader,pointsDifference);
+        int pointsDifference = (int) (request.getPoints() - book.getPoints());
+        readerService.updateReaderPointsAndLevel(reader, pointsDifference);
 
-        bookMapper.updateBookFromDto(bookDto, book);
+        bookMapper.updateBookFromDto(bookMapper.toBookDto(request), book);
+        book.setCoverUrl(coverPath);
+
         bookRepository.save(book);
         return bookMapper.toBookDto(book);
     }

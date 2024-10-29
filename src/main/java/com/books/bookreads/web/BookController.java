@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class BookController {
                 String coverPath = bookService.saveCoverImage(cover);
                 bookService.addBook(request, coverPath, jwtToken);
             } else {
-                bookService.addBook(request, "", jwtToken);
+                bookService.addBook(request, request.getCover(), jwtToken);
             }
 
             return ResponseEntity.ok().build();
@@ -62,11 +63,25 @@ public class BookController {
     }
 
     @PutMapping("/update/{bookId}")
-    public ResponseEntity<BookDto> updateBook(@PathVariable Long bookId, @RequestBody BookDto bookDto,
-                                              @RequestHeader("Authorization") String token){
+    public ResponseEntity<BookDto> updateBook(@PathVariable Long bookId,
+                                           @RequestPart("bookDtoRequest") String bookJson,
+                                           @RequestPart(value = "cover", required = false) MultipartFile cover,
+                                           @RequestHeader("Authorization") String token){
         String jwtToken = token.substring(7).trim();
-        BookDto updatedBook = bookService.updateBook(bookId,bookDto,jwtToken);
-        return ResponseEntity.ok(updatedBook);
+        try {
+            BookDtoRequest request = objectMapper.readValue(bookJson, BookDtoRequest.class);
+            BookDto updatedBook;
+            if(cover !=null && !cover.isEmpty()){
+                String coverPath = bookService.saveCoverImage(cover);
+                updatedBook = bookService.updateBook(bookId,request, coverPath,jwtToken);
+            } else {
+                updatedBook = bookService.updateBook(bookId,request, request.getCover(), jwtToken);
+            }
+
+            return ResponseEntity.ok(updatedBook);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @DeleteMapping("/delete/{bookId}")
@@ -83,8 +98,9 @@ public class BookController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<BookDto>> getBooksByStatus(@PathVariable BookStatus status){
-        List<BookDto> wishlist = bookService.getBooksByStatus(status);
+    public ResponseEntity<List<BookDto>> getBooksByStatus(@PathVariable BookStatus status,
+                                                          @RequestHeader("Authorization") String token){
+        List<BookDto> wishlist = bookService.getBooksByStatusAndReader(status,token);
         return ResponseEntity.ok(wishlist);
     }
 

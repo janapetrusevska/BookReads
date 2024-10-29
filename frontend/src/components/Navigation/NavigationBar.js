@@ -6,7 +6,10 @@ const NavigationBar = () => {
         <nav className="navbar">
             <ul>
                 <li>
-                    <Link to="/">Books</Link>
+                    <Link to="/">Home</Link>
+                </li>
+                <li>
+                    <Link to="/books">Books</Link>
                 </li>
                 <li>
                     <Link to="/">Levels</Link>

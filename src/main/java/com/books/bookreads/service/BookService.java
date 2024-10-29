@@ -11,10 +11,11 @@ import java.util.List;
 public interface BookService{
     List<BookDto> findAll();
     List<BookDto> getBestRated();
-    List<BookDto> getBooksByStatus(BookStatus status);
+    List<BookDto> getBooksByStatusAndReader(BookStatus status, String token);
     BookDto findById(Long bookId);
     void addBook(BookDtoRequest bookDtoRequest, String coverPath, String jwtToken);
-    BookDto updateBook(Long bookId, BookDto bookDto, String jwtToken);
+    BookDto updateBook(Long bookId, BookDtoRequest request, String coverPath, String jwtToken);
     void deleteBook(Long bookId, String jwtToken);
     String saveCoverImage(MultipartFile cover) throws IOException;
+
 }

@@ -30,7 +30,7 @@ const ListBooks = () => {
     return(
         <div className="home-container">
             <div className="book-list-container">
-                <h3>All your books in one place!</h3>
+                <h2>All your books in one place!</h2>
                 <p>Here you can look at all the books you have read, the ones you're enjoying right now,
                     as well as everything that is on your wishlist.</p>
                 <div className="book-list">

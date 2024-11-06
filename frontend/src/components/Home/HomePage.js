@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import BookSectionByStatus from "./BookSectionByStatus";
 import BookModal from "../Books/BookModal";
+import WelcomePage from "./WelcomePage";
 
 const HomePage = () => {
     const [showModal, setShowModal] = useState(false);
@@ -20,18 +21,21 @@ const HomePage = () => {
                     <h1>Welcome to your book world.</h1>
                     <BookSectionByStatus
                         title="Currently reading!"
+                        description="All of the books that you are enjoying right now."
                         status="READING"
                         onAddBook={() => handleOpenModal(null)}
                         onViewDetails={handleOpenModal}
                     />
                     <BookSectionByStatus
                         title="Already read"
+                        description="This is your past book experience in one place."
                         status="READ"
                         onAddBook={() => handleOpenModal(null)}
                         onViewDetails={handleOpenModal}
                     />
                     <BookSectionByStatus
                         title="Wishlist"
+                        description="What will be your next read? Look through these books to find the one."
                         status="WISHLIST"
                         onAddBook={() => handleOpenModal(null)}
                         onViewDetails={handleOpenModal}
@@ -45,8 +49,7 @@ const HomePage = () => {
                 </div>
             ) : (
                 <div>
-                    <h1>Welcome to your book world.</h1>
-                    <h3>Log in or register now so you can create your own library.</h3>
+                    <WelcomePage/>
                 </div>
             )
     )

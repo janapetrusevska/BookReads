@@ -8,6 +8,15 @@ const Profile = () => {
     const [progress, setProgress] = useState(0);
     const token = localStorage.getItem("token");
 
+    const calculateLevelThreshold = (level) => {
+        if (level <= 10) return level * 10;
+        if (level <= 20) return 100 + (level - 10) * 15;
+        if (level <= 30) return 250 + (level - 20) * 20;
+        if (level <= 40) return 450 + (level - 30) * 25;
+        if (level <= 50) return 700 + (level - 40) * 30;
+        return 1000;
+    };
+
     useEffect(() => {
         const fetchReaderProfile = async () => {
             if (token) {
@@ -27,18 +36,13 @@ const Profile = () => {
 
                     setReader(response.data);
 
-                    //TODO: THE MATH ISN'T MATHING :((
-                    // const totalPoints = response.data.totalPoints || 0;
-                    // console.log("points",totalPoints
-                    // );
-                    // const level = response.data.level || 1;
-                    // console.log("level", level);
-                    //
-                    // const p = (totalPoints / (level - 1)) * 10;
-                    // setProgress(p);
-                    // console.log("Progress bar ",p);
-                    //
-                    // console.log("Reader: ", response.data);
+                    const currentLevelThreshold = calculateLevelThreshold(response.data.level);
+                    const nextLevelThreshold = calculateLevelThreshold(response.data.level + 1);
+
+                    const progress = ((response.data.totalPoints - currentLevelThreshold) / (nextLevelThreshold - currentLevelThreshold)) * 100;
+                    setProgress(progress);
+
+                    console.log("progress",progress);
                 } catch (error) {
                     setError(error.message || "An error occurred");
                     console.log(error);
@@ -80,8 +84,7 @@ const Profile = () => {
                         <p>Email: {reader.email}</p>
                         <p>Total points: {reader.totalPoints}</p>
                         <p>Level: {reader.level}</p>
-                        {/*<progress value={2} max={10}/>*/}
-
+                        {/*<ProgressBar now={progress} label={`${progress.toFixed(2)}%`} />*/}
                         <button onClick={logout}>Logout</button>
                     </div>
                 ) : (

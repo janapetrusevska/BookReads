@@ -1,6 +1,29 @@
-import React from "react";
+import React, {useState} from "react";
+import ImageModal from "../BookDetails/ImageModal";
 
-const FormField = ({ label, name, type, options, onChange, value }) => {
+const FormField = ({
+                   label,
+                   name,
+                   type,
+                   options,
+                   onChange,
+                   value,
+                   max,
+                   min,
+                   placeholder,
+                   bookCover}) => {
+    const [showModal, setShowModal] = useState(false);
+
+    const handleViewCover = () => {
+        console.log("Opening modal");
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        console.log("Closing modal");
+        setShowModal(false);
+    };
+
     if (type === "select") {
         return (
             <div className="form-field-add">
@@ -28,17 +51,32 @@ const FormField = ({ label, name, type, options, onChange, value }) => {
 
     if (type === "file") {
         return (
-            <div className="form-field-add">
-                <label>{label}</label>
-                <input
-                    type="file"
-                    name={name}
-                    accept="image/*"
-                    onChange={onChange}
-                />
-            </div>
+            <>
+                <div className="form-field-file-add">
+                    <label>{label}</label><br />
+                    <div className="form-field-file-add-content">
+                        <input
+                            type="file"
+                            name={name}
+                            accept="image/*"
+                            onChange={onChange}
+                        />
+                        {bookCover && (
+                            <div className="cover-notification">
+                                <button className="view-button" onClick={handleViewCover}>
+                                    <b>VIEW</b>
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Conditionally render the ImageModal based on showModal */}
+                {showModal && <ImageModal imageUrl={bookCover} onClose={handleCloseModal} />}
+            </>
         );
     }
+
 
     return (
         <div className="form-field-add">
@@ -47,7 +85,11 @@ const FormField = ({ label, name, type, options, onChange, value }) => {
                 type={type}
                 name={name}
                 onChange={onChange}
-                value={value}/>
+                value={value}
+                max={max}
+                min={min}
+                placeholder={placeholder}
+            />
         </div>
     );
 };

@@ -27,7 +27,7 @@ public class Reader implements UserDetails {
     private String email;
     private String password;
     private int totalPoints;
-    private int level = 1;
+    private int level;
 
     @Transient
     private List<Book> booksRead;
@@ -35,7 +35,9 @@ public class Reader implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public Reader() {}
+    public Reader() {
+        this.level = 1;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

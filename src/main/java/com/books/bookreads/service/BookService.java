@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface BookService{
-    List<BookDto> findAll();
+    List<BookDto> findAllByReader(String jwtToken);
     List<BookDto> getBestRated();
     List<BookDto> getBooksByStatusAndReader(BookStatus status, String token);
     BookDto findById(Long bookId);
@@ -17,5 +17,5 @@ public interface BookService{
     BookDto updateBook(Long bookId, BookDtoRequest request, String coverPath, String jwtToken);
     void deleteBook(Long bookId, String jwtToken);
     String saveCoverImage(MultipartFile cover) throws IOException;
-
+    BookDto updateBookStatus(Long bookId, String status,String token);
 }

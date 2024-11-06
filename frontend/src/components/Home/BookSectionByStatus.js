@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import BookCard from "../Books/BookCard";
 
-const BookSectionByStatus = ({ title, status, onAddBook, onViewDetails }) => {
+const BookSectionByStatus = ({ title, description, status, onAddBook, onViewDetails }) => {
     const [books, setBooks] = useState([]);
     const token = localStorage.getItem("token");
 
@@ -29,6 +29,7 @@ const BookSectionByStatus = ({ title, status, onAddBook, onViewDetails }) => {
         <div>
             <div className="book-list-container">
                 <h3>{title}</h3>
+                <p>{description}</p>
                 <ul className="book-list">
                     {books.map(book => (
                         <BookCard

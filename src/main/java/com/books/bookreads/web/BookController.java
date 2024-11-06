@@ -2,6 +2,7 @@ package com.books.bookreads.web;
 
 import com.books.bookreads.model.dtos.BookDto;
 import com.books.bookreads.model.dtos.BookDtoRequest;
+import com.books.bookreads.model.dtos.UpdateStatusRequest;
 import com.books.bookreads.model.enums.BookStatus;
 import com.books.bookreads.model.enums.Genre;
 import com.books.bookreads.service.BookService;
@@ -25,8 +26,9 @@ public class BookController {
     private final ObjectMapper objectMapper;
 
     @GetMapping
-    public ResponseEntity<List<BookDto>> getAllBooks(){
-        List<BookDto> books = bookService.findAll();
+    public ResponseEntity<List<BookDto>> getAllBooks(@RequestHeader("Authorization") String token){
+        String jwtToken = token.substring(7).trim();
+        List<BookDto> books = bookService.findAllByReader(jwtToken);
         return ResponseEntity.ok(books);
     }
 
@@ -84,6 +86,20 @@ public class BookController {
         }
     }
 
+    @PutMapping("/updateStatus/{bookId}")
+    public ResponseEntity<BookDto> updateBookStatus(@PathVariable Long bookId,
+                                                    @RequestHeader("Authorization") String token,
+                                                    @RequestBody UpdateStatusRequest statusRequest){
+        try{
+            String jwtToken = token.substring(7).trim();
+            String newStatus = statusRequest.getStatus();
+            BookDto updatedBookStatus = bookService.updateBookStatus(bookId,newStatus,jwtToken);
+            return ResponseEntity.ok(updatedBookStatus);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @DeleteMapping("/delete/{bookId}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long bookId, @RequestHeader("Authorization") String token){
         String jwtToken = token.substring(7).trim();
@@ -100,7 +116,8 @@ public class BookController {
     @GetMapping("/status/{status}")
     public ResponseEntity<List<BookDto>> getBooksByStatus(@PathVariable BookStatus status,
                                                           @RequestHeader("Authorization") String token){
-        List<BookDto> wishlist = bookService.getBooksByStatusAndReader(status,token);
+        String jwtToken = token.substring(7).trim();
+        List<BookDto> wishlist = bookService.getBooksByStatusAndReader(status,jwtToken);
         return ResponseEntity.ok(wishlist);
     }
 

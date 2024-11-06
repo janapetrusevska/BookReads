@@ -47,6 +47,20 @@ public class ReaderServiceImpl implements ReaderService {
 
     @Override
     public int calculateLevel(int totalPoints) {
-        return (totalPoints / 10) + 1;
+        int level = 1;
+
+        while (level <= 50 && totalPoints >= calculateLevelThreshold(level)) {
+            level++;
+        }
+
+        return level;
+    }
+    private int calculateLevelThreshold(int level) {
+        if (level <= 10) return level * 10;
+        if (level <= 20) return 100 + (level - 10) * 15;
+        if (level <= 30) return 250 + (level - 20) * 20;
+        if (level <= 40) return 450 + (level - 30) * 25;
+        if (level <= 50) return 700 + (level - 40) * 30;
+        return 1000;
     }
 }

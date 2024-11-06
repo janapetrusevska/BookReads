@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book,Long> {
+    List<Book> findAllByReaderOrderByTitleAsc(Reader reader);
     List<Book> findByStars(double stars);
     List<Book> findByStatusAndReader(BookStatus status, Reader reader);
     List<Book> findByReaderId(Long readerId);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import BookCard from "../Books/BookCard";
+import {fetchBooksByStatus} from "../Service/AxiosService";
 
 const BookSectionByStatus = ({ title, description, status, onAddBook, onViewDetails }) => {
     const [books, setBooks] = useState([]);
@@ -10,13 +10,8 @@ const BookSectionByStatus = ({ title, description, status, onAddBook, onViewDeta
         const fetchBooks = async () => {
             if (token) {
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/books/status/${status}`, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-                    setBooks(response.data);
+                    const fetchedBooks = await fetchBooksByStatus(token,status);
+                    setBooks(fetchedBooks);
                 } catch (error) {
                     console.log(error);
                 }

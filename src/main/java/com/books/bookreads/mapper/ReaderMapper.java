@@ -24,8 +24,12 @@ public class ReaderMapper {
         return new ReaderDto(
                 reader.getId(),
                 reader.getName(),
+                reader.getAboutMe(),
                 reader.getEmail(),
-                bookRepository.countByReaderId(reader.getId())
+                bookRepository.countByReaderId(reader.getId()),
+                reader.getTotalPoints(),
+                reader.getLevel(),
+                reader.getDateCreated()
         );
     }
 }

@@ -1,31 +1,32 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
-import BookCard from "./BookCard";
-import BookModal from "./BookModal";
+import BookCard from "../BookCard";
+import BookModal from "../BookModal";
+import {fetchBooks} from "../../Service/AxiosService";
 
 const ListBooks = () => {
     const [showModal, setShowModal] = useState(false);
     const [books, setBooks] = useState([]);
+    const [selectedBook, setSelectedBook] = useState(null);
     const token = localStorage.getItem("token");
 
     useEffect(() => {
-        const fetchBooks = async () => {
+        const fetch = async () => {
             if(token){
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/books`, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-                    setBooks(response.data);
+                    const booksData = await fetchBooks(token);
+                    setBooks(booksData);
                 } catch (error) {
-                    console.log(error);
+                    console.log(error.message || "An error occurred");
                 }
             }
         };
-        fetchBooks();
+        fetch();
     }, []);
+
+    const onViewDetails = (book) => {
+        setSelectedBook(book);
+        setShowModal(true);
+    }
 
     return(
         <div className="home-container">
@@ -35,7 +36,9 @@ const ListBooks = () => {
                     as well as everything that is on your wishlist.</p>
                 <div className="book-list">
                     {books.map((book, index) => (
-                        <BookCard key={book.id} book={book}/>
+                        <BookCard key={book.id}
+                                  book={book}
+                                  onViewDetails={() => onViewDetails(book)}/>
                     ))}
                     <div className="add-book-card" onClick={() => setShowModal(true)}>
                         <h1>+</h1>
@@ -45,8 +48,8 @@ const ListBooks = () => {
             <BookModal
                 show={showModal}
                 handleClose={() => setShowModal(false)}
-                title="Add a New Book"
-                book={null}
+                title={selectedBook ? "Book Details" : "Add a New Book"}
+                book={selectedBook}
             />
         </div>
     )

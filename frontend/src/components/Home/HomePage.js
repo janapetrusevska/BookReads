@@ -1,12 +1,33 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import BookSectionByStatus from "./BookSectionByStatus";
 import BookModal from "../Books/BookModal";
 import WelcomePage from "./WelcomePage";
+import {jwtDecode} from "jwt-decode";
 
 const HomePage = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedBook, setSelectedBook] = useState(null);
-    const token = localStorage.getItem("token");
+    const [isTokenExpired, setIsTokenExpired] = useState(false);
+    console.log(isTokenExpired);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        console.log("Token",token);
+        if(token){
+            try {
+                const decodedToken = jwtDecode(token);
+                const currentTime = Date.now()/1000;
+                if(decodedToken.exp < currentTime){
+                    setIsTokenExpired(true);
+                }
+            } catch (error){
+                console.log("Invalid token", token);
+                setIsTokenExpired(true);
+            }
+        } else {
+            setIsTokenExpired(true);
+        }
+    }, []);
 
     const handleOpenModal = (book) => {
         setSelectedBook(book);
@@ -16,7 +37,7 @@ const HomePage = () => {
     console.log("Selected book", selectedBook);
 
     return(
-        token ? (
+        !isTokenExpired ? (
                 <div className="home-container">
                     <h1>Welcome to your book world.</h1>
                     <BookSectionByStatus

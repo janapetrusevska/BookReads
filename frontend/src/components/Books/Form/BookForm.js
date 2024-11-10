@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FormField from "./BookFormField";
-import axios from "axios";
 import ToggleSwitch from "./ToggleSwitch";
+import {addOrUpdateBook, fetchGenres} from "../../Service/AxiosService";
 
 const BookForm = ({ book }) => {
     const [genres, setGenres] = useState([]);
@@ -28,19 +28,15 @@ const BookForm = ({ book }) => {
     const token = localStorage.getItem("token");
 
     useEffect(() => {
-        const fetchGenres = async () => {
+        const fetch = async () => {
             try {
-                const response = await axios.get("http://localhost:8080/api/books/genres", {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                setGenres(response.data);
+                const genresData = await fetchGenres(token);
+                setGenres(genresData);
             } catch (error) {
                 console.log(error);
             }
         };
-        fetchGenres();
+        fetch();
     }, [token]);
 
     useEffect(() => {
@@ -109,17 +105,7 @@ const BookForm = ({ book }) => {
         }
 
         try {
-            const url = isEditMode
-                ? `http://localhost:8080/api/books/update/${book.id}`
-                : "http://localhost:8080/api/books/add";
-            const method = isEditMode ? "put" : "post";
-
-            await axios[method](url, data, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            await addOrUpdateBook(bookDtoRequest, cover, token, isEditMode, book?.id);
             window.location.reload();
         } catch (error) {
             console.log(error);
@@ -133,8 +119,8 @@ const BookForm = ({ book }) => {
             <div className="left-column">
                 <FormField label="Title" name="title" type="text" value={formData.title} required onChange={handleChange} />
                 <FormField label="Author" name="author" type="text" value={formData.author} required onChange={handleChange} />
-                <FormField label="Language" name="language" type="text" value={formData.language} required onChange={handleChange} />
-                <FormField label="Rating" name="rating" type="number" value={formData.rating} required min="1" max="5"
+                <FormField label="Language" name="language" type="text" value={formData.language} onChange={handleChange} />
+                <FormField label="Rating" name="rating" type="number" value={formData.rating} min="1" max="5"
                            onChange={handleChange} placeholder={"You can enter a rating between 1 and 5."}/>
                 <FormField label="Stars" name="stars" type="number" value={formData.stars} required min="1" max="5"
                            onChange={handleChange} placeholder={"You can enter between 1 and 5 stars."}/>
@@ -142,8 +128,8 @@ const BookForm = ({ book }) => {
                            onChange={handleChange} placeholder={"You can give a book 1,2 or 3 points."}/>
             </div>
             <div className="right-column">
-                <FormField label="Date" name="readDate" type="date" value={formData.readDate} required onChange={handleChange} />
-                <FormField label="Genre" name="genre" type="select" options={genres} value={formData.genre} required onChange={handleChange} />
+                <FormField label="Date" name="readDate" type="date" value={formData.readDate} onChange={handleChange} />
+                <FormField label="Genre" name="genre" type="select" required options={genres} value={formData.genre} onChange={handleChange} />
                 <FormField label="Status" name="status" type="select" options={statuses} value={formData.status} required onChange={handleChange} />
                 {useUrl ? (
                     <FormField label="Cover URL" name="cover" type="text" value={formData.cover} onChange={handleChange} bookCover={bookCover} />
@@ -151,7 +137,7 @@ const BookForm = ({ book }) => {
                     <FormField label="Cover File" name="cover" type="file" onChange={handleFileChange} bookCover={bookCover}/>
                 )}
                 <ToggleSwitch Name="Cover" onChange={() => setUseUrl(!useUrl)} />
-                <FormField label="Note" name="note" type="textarea" value={formData.note} required onChange={handleChange} />
+                <FormField label="Note" name="note" type="textarea" rows={5} cols={37} value={formData.note} onChange={handleChange} />
             </div>
             <button type="submit" className="form-button">
                 <b>{isEditMode ? "UPDATE BOOK" : "ADD BOOK"}</b>

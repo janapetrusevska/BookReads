@@ -1,11 +1,16 @@
-import React, {useEffect, useState} from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {jwtDecode} from 'jwt-decode';
+import { ProgressBar } from "react-bootstrap";
+import ReadingListSection from "../ReadingList/List/ReadingListSection";
+import BooksCarousel from "../ReadingList/BooksCarousel";
+import { fetchReaderProfile, logoutUser } from "../Service/AxiosService";
+import ReadingListModal from "../ReadingList/ReadingListModal";
 
 const Profile = () => {
     const [reader, setReader] = useState(null);
     const [error, setError] = useState("");
     const [progress, setProgress] = useState(0);
+    const [showModal, setShowModal] = useState(false);
     const token = localStorage.getItem("token");
 
     const calculateLevelThreshold = (level) => {
@@ -18,81 +23,78 @@ const Profile = () => {
     };
 
     useEffect(() => {
-        const fetchReaderProfile = async () => {
+        const loadProfile = async () => {
             if (token) {
-                const decodedToken = jwtDecode(token);
-                const email = decodedToken.sub;
-                console.log("Email ", email);
-
+                const email = jwtDecode(token).sub;
                 try {
-                    const response = await axios.get("http://localhost:8080/api/reader/profile", {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                        params: {
-                            email: email,
-                        }
-                    });
+                    const profileInfo = await fetchReaderProfile(token, email);
+                    setReader(profileInfo);
 
-                    setReader(response.data);
-
-                    const currentLevelThreshold = calculateLevelThreshold(response.data.level);
-                    const nextLevelThreshold = calculateLevelThreshold(response.data.level + 1);
-
-                    const progress = ((response.data.totalPoints - currentLevelThreshold) / (nextLevelThreshold - currentLevelThreshold)) * 100;
-                    setProgress(progress);
-
-                    console.log("progress",progress);
-                } catch (error) {
-                    setError(error.message || "An error occurred");
-                    console.log(error);
+                    const currentThreshold = calculateLevelThreshold(profileInfo.level);
+                    const nextThreshold = calculateLevelThreshold(profileInfo.level + 1);
+                    setProgress(((profileInfo.totalPoints - currentThreshold) / (nextThreshold - currentThreshold)) * 100);
+                } catch (err) {
+                    setError(err.message || "An error occurred");
                 }
             } else {
                 setError("No token found");
             }
         };
-            fetchReaderProfile();
+
+        loadProfile();
     }, [token]);
 
-    const logout = async () => {
+    const handleLogout = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/logout', {}, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-
-            if (response.status === 200) {
-                localStorage.removeItem('token');
-                window.location.href = '/login';
-            } else {
-                console.error('Error logging out:', response.status);
-            }
-        } catch (error) {
-            console.error('Error logging out:', error);
+            await logoutUser(token);
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        } catch {
+            setError("Failed to log out. Please try again.");
         }
-    }
+    };
+
+    const handleShowModal = () => {
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
 
     return (
-        <div className="profile-container">
-            <div>
-                {error && <div className="error-message">{error}</div>}
-                {reader ? (
+        <>
+            {error && <div className="error-message">{error}</div>}
+            {reader ? (
+                <div className="profile-container">
                     <div className="profile-details">
                         <h1>{reader.name}</h1>
-                        <p>Email: {reader.email}</p>
+                        <h3>{reader.email}</h3>
+                        <p>Level {reader.level}</p>
+                        <ProgressBar now={progress} label={`${Math.round(progress)}%`} />
+                        <p><i>{reader.aboutMe}</i></p>
+                        <p>Joined on <b>{reader.dateCreated}</b></p>
+                        <p>Books entered: {reader.booksRead}</p>
                         <p>Total points: {reader.totalPoints}</p>
-                        <p>Level: {reader.level}</p>
-                        {/*<ProgressBar now={progress} label={`${progress.toFixed(2)}%`} />*/}
-                        <button onClick={logout}>Logout</button>
+                        <div style={{ display: "flex" }}>
+                            <button className="logout-button" onClick={handleLogout}>Edit</button>
+                            <button className="logout-button" onClick={handleLogout}>Logout</button>
+                        </div>
                     </div>
-                ) : (
-                    <p>Loading...</p>
-                )}
-            </div>
-        </div>
-    )
-}
+                    <div className="profile-reading-section">
+                        <BooksCarousel />
+                        <ReadingListSection name={reader.name} showModal={handleShowModal}/>
+                    </div>
+                    <ReadingListModal
+                        show={showModal}
+                        handleClose={handleCloseModal}
+                        title="Add a Reading List"/>
+                </div>
+            ) : (
+                <p>Loading...</p>
+            )}
+        </>
+    );
+};
 
 export default Profile;

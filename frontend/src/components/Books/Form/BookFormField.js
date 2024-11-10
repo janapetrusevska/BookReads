@@ -11,7 +11,10 @@ const FormField = ({
                    max,
                    min,
                    placeholder,
-                   bookCover}) => {
+                   bookCover,
+                   required,
+                   rows,
+                   cols}) => {
     const [showModal, setShowModal] = useState(false);
 
     const handleViewCover = () => {
@@ -28,7 +31,7 @@ const FormField = ({
         return (
             <div className="form-field-add">
                 <label>{label}</label>
-                <select name={name} value={value} required onChange={onChange}>
+                <select name={name} value={value} required={required} onChange={onChange}>
                     <option value="">Select a {label.toLowerCase()}</option>
                     {options.map((option, index) => (
                         <option key={index} value={option}>
@@ -44,7 +47,7 @@ const FormField = ({
         return (
             <div className="form-field-add">
                 <label>{label}</label>
-                <textarea name={name} value={value} rows="5" cols="37" onChange={onChange}/>
+                <textarea name={name} value={value} rows={rows} cols={cols} placeholder={placeholder} style={{"fontSize":"16px", "fontFamily":"Arial"}} onChange={onChange}/>
             </div>
         );
     }
@@ -71,7 +74,6 @@ const FormField = ({
                     </div>
                 </div>
 
-                {/* Conditionally render the ImageModal based on showModal */}
                 {showModal && <ImageModal imageUrl={bookCover} onClose={handleCloseModal} />}
             </>
         );

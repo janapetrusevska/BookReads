@@ -1,5 +1,5 @@
 import React from "react";
-import BookForm from "./AddForm/BookForm";
+import BookForm from "./Form/BookForm";
 import BookDetails from "./BookDetails/BookDetails";
 
 const BookModal = ({ show, handleClose, title, book }) => {
@@ -12,7 +12,7 @@ const BookModal = ({ show, handleClose, title, book }) => {
             <div className="modal-container">
                 <div className="modal-top-bar">
                     <h2>{title}</h2>
-                    <button onClick={handleClose}>X</button>
+                    <button className="close-modal" onClick={handleClose}>X</button>
                 </div>
                 {book ? (
                     <BookDetails book={book}/>

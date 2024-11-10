@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import axios from "axios";
-import BookForm from "../AddForm/BookForm";
+import BookForm from "../Form/BookForm";
+import {changeBookStatus, deleteBook} from "../../Service/AxiosService";
 
 const BookDetails = ({ book }) => {
     const [isEditing, setIsEditing] = useState(false);
@@ -12,11 +12,7 @@ const BookDetails = ({ book }) => {
 
     const handleDeleteBook = async () => {
         try{
-            await axios.delete(`http://localhost:8080/api/books/delete/${bookId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            await deleteBook(bookId, token);
             window.location.reload();
         } catch (error){
             console.log(error);
@@ -29,13 +25,7 @@ const BookDetails = ({ book }) => {
 
     const changeStatus = async (newStatus) => {
         try {
-            await axios.put(`http://localhost:8080/api/books/updateStatus/${bookId}`, {
-                status: newStatus
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            await changeBookStatus(bookId, newStatus, token);
             window.location.reload();
         } catch (error) {
             console.log(error);
@@ -56,7 +46,7 @@ const BookDetails = ({ book }) => {
                             <span className="username">{book.username}</span>
                         </div>
                     </div>
-                    <div className="right-column">
+                    <div className="right-column-details">
                         <div className="details-title">
                             <h1><strong>{book.title}</strong></h1>
                             <h3><strong>{book.author}</strong></h3>

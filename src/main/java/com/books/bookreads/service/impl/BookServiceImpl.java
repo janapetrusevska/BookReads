@@ -80,7 +80,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto updateBook(Long bookId, BookDtoRequest request, String coverPath, String jwtToken) {
-        Reader reader = readerService.getReaderFromToken(jwtToken);  // Use the helper method
+        Reader reader = readerService.getReaderFromToken(jwtToken);
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found."));
 

@@ -4,10 +4,13 @@ import com.books.bookreads.model.dtos.BookDto;
 import com.books.bookreads.model.enums.BookStatus;
 import com.books.bookreads.model.enums.Genre;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Data
@@ -42,6 +45,9 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "reader_id", nullable = false)
     private Reader reader;
+
+    @ManyToMany(mappedBy = "books")
+    private Set<ReadingList> readingLists;
 
     public Book(BookDto bookDto){
         BeanUtils.copyProperties(bookDto, this, "id");

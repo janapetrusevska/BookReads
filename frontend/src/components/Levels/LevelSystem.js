@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {jwtDecode} from "jwt-decode";
+import {fetchReaderProfile} from "../Service/AxiosService";
 
 const LevelSystem = () => {
     const levels = Array.from({ length: 50 }, (_, index) => index + 1);
@@ -9,17 +9,13 @@ const LevelSystem = () => {
     const token = localStorage.getItem("token");
 
     useEffect(() => {
-        const fetchReaderProfile = async () => {
+        const fetchProfile = async () => {
             if (token) {
-                const decodedToken = jwtDecode(token);
-                const email = decodedToken.sub;
+                const email = jwtDecode(token).sub;
 
                 try {
-                    const response = await axios.get("http://localhost:8080/api/reader/profile", {
-                        headers: { Authorization: `Bearer ${token}` },
-                        params: { email },
-                    });
-                    setReader(response.data);
+                    const profileInfo = await fetchReaderProfile(token, email);
+                    setReader(profileInfo);
                 } catch (error) {
                     setError(error.message || "An error occurred");
                 }
@@ -27,7 +23,8 @@ const LevelSystem = () => {
                 setError("No token found");
             }
         };
-        fetchReaderProfile();
+
+        fetchProfile();
     }, [token]);
 
     const calculateLevelThreshold = (level) => {

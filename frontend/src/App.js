@@ -5,7 +5,7 @@ import Register from "./components/Reader/Register";
 import HomePage from "./components/Home/HomePage";
 import NavigationBar from "./components/Navigation/NavigationBar";
 import Profile from "./components/Reader/Profile";
-import ListBooks from "./components/Books/ListBooks";
+import ListBooks from "./components/Books/List/ListBooks";
 import LevelSystem from "./components/Levels/LevelSystem";
 
 function App() {

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import axios from "axios";
 import "../../styles.css";
 import {useNavigate} from "react-router-dom";
+import {registerUser} from "../Service/AxiosService";
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -18,12 +18,8 @@ const Register = () => {
             return;
         }
         try {
-            const response = await axios.post("http://localhost:8080/api/auth/register", {
-                name: name,
-                email: email,
-                password: password
-            })
-            localStorage.setItem('token', response.data.jwtToken);
+            const jwtToken = await registerUser(name, email, password);
+            localStorage.setItem('token', jwtToken);
             navigate("/login");
         } catch (error){
             if(error.response.status === 403){

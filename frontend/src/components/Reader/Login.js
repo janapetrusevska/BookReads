@@ -1,7 +1,7 @@
-import React, {useState} from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles.css";
+import { loginUser } from "../Service/AxiosService";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -13,18 +13,15 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post("http://localhost:8080/api/auth/authenticate", {
-                email: email,
-                password: password
-            })
-            localStorage.setItem('token', response.data.jwtToken);
-            navigate("/");
-        } catch (error){
+            const jwtToken = await loginUser(email, password);
+            localStorage.setItem('token', jwtToken);
+            window.location.href = "/";
+        } catch (error) {
             setError("Invalid credentials, please try again");
         }
     }
 
-    return(
+    return (
         <div className="form-container">
             <form onSubmit={handleSubmit} className="form">
                 <h2>Login</h2>
@@ -50,10 +47,10 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                { error && <p className="error">{error}</p>}
+                {error && <p className="error">{error}</p>}
                 <button type="submit" className="form-button">LOGIN</button>
-                <p style={{fontSize: "16px"}}>Don't have a profile?
-                    <a href="/register" style={{textDecoration:"none", fontWeight:"bold"}}> REGISTER HERE</a>
+                <p style={{ fontSize: "16px" }}>Don't have a profile?
+                    <a href="/register" style={{ textDecoration: "none", fontWeight: "bold" }}> REGISTER HERE</a>
                 </p>
             </form>
         </div>

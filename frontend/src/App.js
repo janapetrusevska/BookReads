@@ -4,7 +4,7 @@ import Login from "./components/Reader/Login";
 import Register from "./components/Reader/Register";
 import HomePage from "./components/Home/HomePage";
 import NavigationBar from "./components/Navigation/NavigationBar";
-import Profile from "./components/Reader/Profile";
+import Profile from "./components/Reader/Profile/Profile";
 import ListBooks from "./components/Books/List/ListBooks";
 import LevelSystem from "./components/Levels/LevelSystem";
 
@@ -16,7 +16,7 @@ function App() {
             <Route path="/" element={<HomePage/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/register" element={<Register/>}/>
-            <Route path="/profile" element={<Profile/>}/>
+            <Route path="/profile/:readerId" element={<Profile/>}/>
             <Route path="/books" element={<ListBooks/>}/>
             <Route path="/levels" element={<LevelSystem/>}/>
         </Routes>

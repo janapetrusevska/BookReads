@@ -34,12 +34,26 @@ const HomePage = () => {
         setShowModal(true);
     }
 
+    const handleShowForm = () => {
+        setShowModal(true);
+    }
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedBook(null);
+    }
+
     console.log("Selected book", selectedBook);
 
     return(
         !isTokenExpired ? (
                 <div className="home-container">
-                    <h1>Welcome to your book world.</h1>
+                    <div className="title-container">
+                        <h1>Welcome to your book world.</h1>
+                        <button type="submit"  className="circle-button" onClick={handleShowForm}>
+                            <b>+</b>
+                        </button>
+                    </div>
                     <BookSectionByStatus
                         title="Currently reading!"
                         description="All of the books that you are enjoying right now."
@@ -63,9 +77,10 @@ const HomePage = () => {
                     />
                     <BookModal
                         show={showModal}
-                        handleClose={() => setShowModal(false)}
+                        handleClose={handleCloseModal}
                         title={selectedBook ? "Book Details" : "Add a New Book"}
                         book={selectedBook}
+                        isLoggedInReader={true}
                     />
                 </div>
             ) : (

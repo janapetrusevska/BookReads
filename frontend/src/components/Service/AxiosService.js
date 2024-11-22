@@ -44,19 +44,43 @@ export const loginUser = async (email, password) => {
     }
 };
 
-export const fetchReaderProfile = async (token, email) => {
+export const fetchReaderProfile = async (token, readerId) => {
     setAuthorizationHeader(token);
     try {
-        const response = await axiosInstance.get(`/reader/profile`,{
-            params: {
-                "email" : email,
-            }
-        });
+        const response = await axiosInstance.get(`/reader/profile/${readerId}`);
         return response.data;
     } catch (error) {
         throw new Error('Error fetching reader profile: ' + error.message);
     }
 };
+
+export const fetchAllReaders = async (token) => {
+    setAuthorizationHeader(token);
+    try{
+        const response = await axiosInstance.get(`/reader/all`);
+        return response.data;
+    } catch (error){
+        console.error("Error fetching all readers:", error);
+        throw error;
+    }
+}
+
+export const editProfileInfo = async (token, profileInfoRequest) => {
+    setAuthorizationHeader(token);
+    try {
+        const response = await axiosInstance.put(`/reader/editProfile`,
+            profileInfoRequest,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+        return response.data;
+    } catch (error) {
+        throw new Error('Error fetching reader profile: ' + error.message);
+    }
+};
+
 
 export const logoutUser = async (token) => {
     setAuthorizationHeader(token);
@@ -68,10 +92,10 @@ export const logoutUser = async (token) => {
     }
 };
 
-export const fetchReadingLists = async (token) => {
-    setAuthorizationHeader(token);
+export const fetchReadingLists = async (token,readerId) => {
+    setAuthorizationHeader(token)
     try {
-        const response = await axiosInstance.get('/readingList');
+        const response = await axiosInstance.get(`/readingList/byReader/${readerId}`);
         return response.data;
     } catch (error) {
         throw new Error('Error fetching reading lists: ' + error.message);
@@ -89,6 +113,33 @@ export const fetchBooks = async (token) => {
         return response.data;
     } catch (error) {
         throw new Error('Error fetching books: ' + error.message);
+    }
+};
+
+
+export const fetchBooksByIds = async (ids, token) => {
+    setAuthorizationHeader(token);
+    try {
+        const response = await axiosInstance.post(`/books/byIds`, ids, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching books by IDs:", error);
+        throw error;
+    }
+};
+
+
+export const fetchBooksByReaderByStatus = async (readerId,token, status) => {
+    setAuthorizationHeader(token);
+    try{
+        const response = await axiosInstance.get(`/books/status/${status}/${readerId}`);
+        return response.data;
+    } catch (error){
+        throw new Error("Error fetching books: "+error.message);
     }
 };
 
@@ -167,3 +218,74 @@ export const createReadingList = async (readingListData, token) => {
         throw new Error('Error creating a reading list: ' + error.message);
     }
 }
+
+export const deleteReadingList = async (readingListId, token) => {
+    setAuthorizationHeader(token);
+    try {
+        await axiosInstance.delete(`/readingList/delete/${readingListId}`);
+    } catch (error) {
+        throw new Error('Error deleting book: ' + error.message);
+    }
+};
+
+export const createOrUpdateReadingList = async (readingListData, token, isEditMode, readingListId) => {
+    const data = new FormData();
+    data.append('readingListDto', JSON.stringify(readingListData));
+    setAuthorizationHeader(token);
+    try {
+        const url = isEditMode
+            ? `/readingList/update/${readingListId}`
+            : '/readingList/create';
+        const method = isEditMode ? 'put' : 'post';
+
+        if (isEditMode) {
+            const data = new FormData();
+            data.append('readingListDto', JSON.stringify(readingListData));
+
+            await axiosInstance[method](url, data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+        } else {
+            await axiosInstance[method](url, JSON.stringify(readingListData), {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+        }
+    } catch (error) {
+        throw new Error('Error adding/updating reading list: ' + error.message);
+    }
+};
+
+export const fetchIsReaderFollowed = async (isFollowed, token) => {
+    setAuthorizationHeader(token);
+    try {
+        const response = await axiosInstance.get(`/reader/isFollowed/${isFollowed}`);
+        return response.data;
+    } catch (error) {
+        throw new Error('Error fetching followed reader: ' + error.message);
+    }
+};
+
+export const followReader = async (followingId, token) => {
+    setAuthorizationHeader(token);
+    try{
+        const response = await axiosInstance.post(`/reader/follow/${followingId}`);
+        return response.data;
+    } catch (error){
+        throw new Error('Error following reader: ' + error.message);
+    }
+};
+
+export const unfollowReader = async (followingId, token) => {
+    setAuthorizationHeader(token);
+    try{
+        const response = await axiosInstance.delete(`/reader/unfollow/${followingId}`);
+        return response.data;
+    } catch (error){
+        throw new Error('Error following reader: ' + error.message);
+    }
+};
+

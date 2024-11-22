@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import FormField from "../../Books/Form/BookFormField";
 import Select from 'react-select'
-import {createReadingList, fetchBooks} from "../../Service/AxiosService";
+import {createOrUpdateReadingList, fetchBooks} from "../../Service/AxiosService";
 
-const ReadingListForm = () => {
+const ReadingListForm = ({readingList}) => {
     const [books, setBooks] = useState([]);
     const [formData, setFormData] = useState({
         title: '',
@@ -11,6 +11,7 @@ const ReadingListForm = () => {
         books: books,
     });
     const token = localStorage.getItem("token");
+    const isEditMode = Boolean(readingList);
 
     useEffect(() => {
         const fetch = async () =>{
@@ -26,7 +27,15 @@ const ReadingListForm = () => {
             }
         }
         fetch();
-    }, []);
+
+        if (isEditMode && readingList) {
+            setFormData({
+                title: readingList.title || '',
+                description: readingList.description || '',
+                books: readingList.books || [],
+            });
+        }
+    }, [token, isEditMode, readingList]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -55,8 +64,10 @@ const ReadingListForm = () => {
         const data = new FormData();
         data.append('readingListDto', JSON.stringify(readingListDto));
 
+        console.log("Toke",token);
+
         try{
-            await createReadingList(readingListDto,token);
+            await createOrUpdateReadingList(readingListDto, token, isEditMode, readingList ? readingList.id : null);
             window.location.reload();
         } catch (error){
             console.log(error);
@@ -75,13 +86,14 @@ const ReadingListForm = () => {
                     options={books}
                     placeholder=" "
                     className="reading-list-select"
+                    value={books.filter(book => formData.books.includes(book.value))}
                     onChange={handleSelectChange}
                 />
             </div>
             <FormField label="Description" name="description" type="textarea"
                        value={formData.description} rows={10} cols={82} onChange={handleChange} />
             <button type="submit" className="form-button">
-                <b>CREATE READING LIST</b>
+                <b>{isEditMode ? "UPDATE READING LIST" : "CREATE READING LIST"}</b>
             </button>
         </form>
     )

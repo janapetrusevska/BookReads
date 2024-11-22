@@ -33,8 +33,7 @@ public class ReadingList {
     private Set<Comment> comments;
 
     private LocalDate dateCreated;
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "READING_LIST_BOOKS",
             joinColumns = @JoinColumn(name = "LIST_ID"),
@@ -48,4 +47,18 @@ public class ReadingList {
         this.likes=0;
         this.dateCreated = LocalDate.now();
     }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ReadingList that = (ReadingList) obj;
+        return id != null && id.equals(that.id);
+    }
+
 }

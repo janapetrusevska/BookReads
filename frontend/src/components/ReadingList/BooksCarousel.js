@@ -3,9 +3,9 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import BookCard from "../Books/BookCard";
 import BookModal from "../Books/BookModal";
-import {fetchBooksByStatus} from "../Service/AxiosService";
+import {fetchBooksByReaderByStatus} from "../Service/AxiosService";
 
-const BookCarousel = () => {
+const BookCarousel = ({readerId, isLoggedInReader}) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedBook, setSelectedBook] = useState(null);
     const [books, setBooks] = useState([]);
@@ -16,7 +16,7 @@ const BookCarousel = () => {
         const fetchBooksData = async () => {
             if (token) {
                 try {
-                    const booksByStatus = await fetchBooksByStatus(token,status);
+                    const booksByStatus = await fetchBooksByReaderByStatus(readerId,token,status);
                     setBooks(booksByStatus);
                 } catch (error) {
                     console.log(error);
@@ -24,7 +24,7 @@ const BookCarousel = () => {
             }
         };
         fetchBooksData();
-    }, [status, token]);
+    }, [readerId]);
 
     const onViewDetails = (book) => {
         setSelectedBook(book);
@@ -43,32 +43,42 @@ const BookCarousel = () => {
 
     return (
         <>
-            <h2>All Read Books</h2>
-            <Carousel
-                showThumbs={true}
-                useKeyboardArrows
-                className="carousel"
-            >
-                <div className="carousel-books">
-                    {bookChunks.map((chunk, index) => (
-                        <div key={index} style={{ display: 'flex'}}>
-                            {chunk.map(book => (
-                                <BookCard
-                                    key={book.id}
-                                    book={book}
-                                    onViewDetails={() => onViewDetails(book)}
-                                />
+            <div className="carousel-container">
+                <h2>All Read Books</h2>
+                {
+                    books.length > 0 ?
+                    (
+                        <Carousel
+                            showThumbs={true}
+                            showArrows={true}
+                            useKeyboardArrows={true}
+                            className="carousel"
+                        >
+                            {bookChunks.map((chunk, index) => (
+                                <div key={index} className="carousel-books">
+                                    <div style={{ display: 'flex' }}>
+                                        {chunk.map(book => (
+                                            <BookCard
+                                                key={book.id}
+                                                book={book}
+                                                onViewDetails={() => onViewDetails(book)}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
                             ))}
-                        </div>
-                    ))}
-                </div>
-            </Carousel>
-            <BookModal
-                show={showModal}
-                handleClose={() => setShowModal(false)}
-                title="Book Details"
-                book={selectedBook}
-            />
+                        </Carousel>
+                    ) : <p>No  read books yet.</p>
+                }
+                <BookModal
+                    show={showModal}
+                    handleClose={() => setShowModal(false)}
+                    title="Book Details"
+                    book={selectedBook}
+                    isLoggedInReader={isLoggedInReader}
+                />
+            </div>
+
         </>
     );
 };

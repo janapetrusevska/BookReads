@@ -10,7 +10,9 @@ import java.util.List;
 
 public interface BookService{
     List<BookDto> findAllByReader(String jwtToken);
+    List<BookDto> findByIds(List<Long> ids);
     List<BookDto> getBestRated();
+    List<BookDto> getBooksByStatusAndReader(BookStatus status,Long readerId, String token);
     List<BookDto> getBooksByStatusAndReader(BookStatus status, String token);
     BookDto findById(Long bookId);
     void addBook(BookDtoRequest bookDtoRequest, String coverPath, String jwtToken);

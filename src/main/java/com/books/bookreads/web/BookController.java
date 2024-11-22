@@ -32,6 +32,13 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
+    @PostMapping("/byIds")
+    public ResponseEntity<List<BookDto>> getAllBooksByIds(@RequestHeader("Authorization") String token,
+                                                          @RequestBody List<Long> ids) {
+        List<BookDto> allBooks = bookService.findByIds(ids);
+        return ResponseEntity.ok(allBooks);
+    }
+
     @GetMapping("/{bookId}")
     public ResponseEntity<BookDto> findBookById(@PathVariable Long bookId) {
         BookDto bookDto = bookService.findById(bookId);
@@ -118,6 +125,15 @@ public class BookController {
                                                           @RequestHeader("Authorization") String token){
         String jwtToken = token.substring(7).trim();
         List<BookDto> wishlist = bookService.getBooksByStatusAndReader(status,jwtToken);
+        return ResponseEntity.ok(wishlist);
+    }
+
+    @GetMapping("/status/{status}/{readerId}")
+    public ResponseEntity<List<BookDto>> getBooksByReaderByStatus(@PathVariable BookStatus status,
+                                                          @PathVariable Long readerId,
+                                                          @RequestHeader("Authorization") String token){
+        String jwtToken = token.substring(7).trim();
+        List<BookDto> wishlist = bookService.getBooksByStatusAndReader(status,readerId,jwtToken);
         return ResponseEntity.ok(wishlist);
     }
 

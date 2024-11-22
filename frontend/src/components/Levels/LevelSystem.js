@@ -7,14 +7,14 @@ const LevelSystem = () => {
     const [reader, setReader] = useState(null);
     const [error, setError] = useState("");
     const token = localStorage.getItem("token");
+    const decodedToken = jwtDecode(token);
+    const readerId = decodedToken.readerId;
 
     useEffect(() => {
         const fetchProfile = async () => {
             if (token) {
-                const email = jwtDecode(token).sub;
-
                 try {
-                    const profileInfo = await fetchReaderProfile(token, email);
+                    const profileInfo = await fetchReaderProfile(token, readerId);
                     setReader(profileInfo);
                 } catch (error) {
                     setError(error.message || "An error occurred");

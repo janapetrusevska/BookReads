@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import FormField from "./BookFormField";
 import ToggleSwitch from "./ToggleSwitch";
 import {addOrUpdateBook, fetchGenres} from "../../Service/AxiosService";
+import DefaultPhoto from "../../../images/defaultBook.jpg";
+import StarRating from "./StarRating";
+import SearchBooks from "../../OpenLibraryApi/SearchBooks";
 
 const BookForm = ({ book }) => {
     const [genres, setGenres] = useState([]);
@@ -14,7 +17,6 @@ const BookForm = ({ book }) => {
         title: '',
         author: '',
         language: '',
-        rating: '',
         stars: '',
         points: '',
         readDate: '',
@@ -45,7 +47,6 @@ const BookForm = ({ book }) => {
                 title: book.title || '',
                 author: book.author || '',
                 language: book.language || '',
-                rating: book.rating || '',
                 stars: book.stars || '',
                 points: book.points || '',
                 readDate: book.readDate || '',
@@ -80,7 +81,6 @@ const BookForm = ({ book }) => {
             title: formData.title,
             author: formData.author,
             language: formData.language,
-            rating: formData.rating,
             stars: formData.stars,
             points: formData.points,
             readDate: formData.readDate,
@@ -95,7 +95,10 @@ const BookForm = ({ book }) => {
             bookDtoRequest.cover = cover;
         } else if (isEditMode && !cover && !formData.cover) {
             bookDtoRequest.cover = book.cover;
+        } else {
+            bookDtoRequest.cover = DefaultPhoto;
         }
+
 
         const data = new FormData();
         data.append('bookDtoRequest', JSON.stringify(bookDtoRequest));
@@ -112,20 +115,38 @@ const BookForm = ({ book }) => {
         }
     };
 
+    const handleStarSelect = (value) => {
+        formData.stars = value;
+        console.log("Selected stars:", value);
+    };
 
+    const handleOnSelectedBook = (title,author,coverUrl) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            title: title,
+            author: author,
+            cover: coverUrl
+        }));
+        setUseUrl(true);
+    }
 
     return (
         <form onSubmit={handleSubmit} className="modal-form-container">
+            {
+                !isEditMode ?
+                    <SearchBooks onSelectBook={handleOnSelectedBook}/> :
+                    <></>
+            }
             <div className="left-column">
                 <FormField label="Title" name="title" type="text" value={formData.title} required onChange={handleChange} />
                 <FormField label="Author" name="author" type="text" value={formData.author} required onChange={handleChange} />
                 <FormField label="Language" name="language" type="text" value={formData.language} onChange={handleChange} />
-                <FormField label="Rating" name="rating" type="number" value={formData.rating} min="1" max="5"
-                           onChange={handleChange} placeholder={"You can enter a rating between 1 and 5."}/>
-                <FormField label="Stars" name="stars" type="number" value={formData.stars} required min="1" max="5"
-                           onChange={handleChange} placeholder={"You can enter between 1 and 5 stars."}/>
                 <FormField label="Points" name="points" type="number" value={formData.points} required min="1" max="3"
                            onChange={handleChange} placeholder={"You can give a book 1,2 or 3 points."}/>
+                <div className="stars-container">
+                    <p>Your star rating for the book:</p>
+                    <StarRating onSelect={handleStarSelect} initialValue={parseInt(formData.stars, 10)}/>
+                </div>
             </div>
             <div className="right-column">
                 <FormField label="Date" name="readDate" type="date" value={formData.readDate} onChange={handleChange} />

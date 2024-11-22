@@ -7,6 +7,7 @@ import com.books.bookreads.model.dtos.BookDto;
 import com.books.bookreads.model.dtos.BookDtoRequest;
 import com.books.bookreads.model.enums.BookStatus;
 import com.books.bookreads.repository.BookRepository;
+import com.books.bookreads.repository.ReaderRepository;
 import com.books.bookreads.service.BookService;
 import com.books.bookreads.service.ImageService;
 import com.books.bookreads.service.ReaderService;
@@ -25,13 +26,16 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
     private final ReaderService readerService;
     private final ImageService imageService;
+    private final ReaderRepository readerRepository;
 
     public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper,
-                           ReaderService readerService, ImageService imageService) {
+                           ReaderService readerService, ImageService imageService,
+                           ReaderRepository readerRepository) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
         this.readerService = readerService;
         this.imageService = imageService;
+        this.readerRepository = readerRepository;
     }
 
     public List<BookDto> findAllByReader(String jwtToken) {
@@ -40,6 +44,15 @@ public class BookServiceImpl implements BookService {
                 .map(bookMapper::toBookDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<BookDto> findByIds(List<Long> ids) {
+        List<Book> books = bookRepository.findAllById(ids);
+        return books.stream()
+                .map(bookMapper::toBookDto)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public List<BookDto> getBestRated() {
@@ -51,6 +64,14 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> getBooksByStatusAndReader(BookStatus status, String token) {
         Reader reader = readerService.getReaderFromToken(token);
+        return bookRepository.findByStatusAndReader(status, reader).stream()
+                .map(bookMapper::toBookDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<BookDto> getBooksByStatusAndReader(BookStatus status, Long readerId, String token) {
+        Reader reader = readerRepository.findById(readerId)
+                .orElseThrow(() -> new IllegalArgumentException("Reader with ID " + readerId + " not found."));;
         return bookRepository.findByStatusAndReader(status, reader).stream()
                 .map(bookMapper::toBookDto)
                 .collect(Collectors.toList());

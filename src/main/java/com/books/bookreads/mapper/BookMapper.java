@@ -29,7 +29,6 @@ public class BookMapper {
                 book.getTitle(),
                 book.getAuthor(),
                 book.getLanguage(),
-                book.getRating(),
                 book.getStars(),
                 book.getPoints(),
                 book.getReadDate(),
@@ -65,9 +64,6 @@ public class BookMapper {
         }
         if (bookDto.getLanguage() != null) {
             book.setLanguage(bookDto.getLanguage());
-        }
-        if (bookDto.getRating() != 0) {
-            book.setRating(bookDto.getRating());
         }
         if (bookDto.getStars() != 0) {
             book.setStars(bookDto.getStars());
@@ -107,7 +103,6 @@ public class BookMapper {
         bookDto.setTitle(request.getTitle());
         bookDto.setAuthor(request.getAuthor());
         bookDto.setLanguage(request.getLanguage());
-        bookDto.setRating(request.getRating());
         bookDto.setStars(request.getStars());
         bookDto.setPoints(request.getPoints());
         bookDto.setReadDate(request.getReadDate());

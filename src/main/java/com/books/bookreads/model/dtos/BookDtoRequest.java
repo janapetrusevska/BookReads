@@ -8,7 +8,6 @@ public class BookDtoRequest {
     private String title;
     private String author;
     private String language;
-    private double rating;
     private double stars;
     private double points;
     private LocalDate readDate;

@@ -6,7 +6,7 @@ import com.books.bookreads.model.dtos.ReadingListDto;
 import java.util.List;
 
 public interface ReadingListService {
-    List<ReadingListDto> getReadingListsForReader(String jwtToken);
+    List<ReadingListDto> getReadingListsForReader(Long readerId);
     ReadingList getReadingListById(Long readingListId);
     void createReadingList(ReadingListDto readingListDto, String jwtToken);
     ReadingListDto updateReadingList(Long readingListId, ReadingListDto readingListDto);

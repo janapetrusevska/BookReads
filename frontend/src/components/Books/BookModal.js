@@ -2,7 +2,7 @@ import React from "react";
 import BookForm from "./Form/BookForm";
 import BookDetails from "./BookDetails/BookDetails";
 
-const BookModal = ({ show, handleClose, title, book }) => {
+const BookModal = ({ show, handleClose, title, book, isLoggedInReader }) => {
     if (!show) {
         return null;
     }
@@ -15,9 +15,12 @@ const BookModal = ({ show, handleClose, title, book }) => {
                     <button className="close-modal" onClick={handleClose}>X</button>
                 </div>
                 {book ? (
-                    <BookDetails book={book}/>
+                    <BookDetails
+                        book={book}
+                        isLoggedInReader={isLoggedInReader}
+                    />
                 ) : (
-                    <BookForm />
+                    <BookForm/>
                 )}
             </div>
         </div>

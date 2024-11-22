@@ -6,6 +6,7 @@ import com.books.bookreads.model.Reader;
 import com.books.bookreads.model.ReadingList;
 import com.books.bookreads.model.dtos.ReadingListDto;
 import com.books.bookreads.repository.BookRepository;
+import com.books.bookreads.repository.ReaderRepository;
 import com.books.bookreads.repository.ReadingListRepository;
 import com.books.bookreads.service.ReaderService;
 import com.books.bookreads.service.ReadingListService;
@@ -21,20 +22,23 @@ import java.util.Set;
 public class ReadingListServiceImpl implements ReadingListService {
     private final ReadingListRepository readingListRepository;
     private final BookRepository bookRepository;
+    private final ReaderRepository readerRepository;
     private final ReaderService readerService;
     private final ReadingListMapper readingListMapper;
 
-    public ReadingListServiceImpl(ReadingListRepository readingListRepository, BookRepository bookRepository, ReaderService readerService, ReadingListMapper readingListMapper) {
+
+    public ReadingListServiceImpl(ReadingListRepository readingListRepository, BookRepository bookRepository, ReaderRepository readerRepository, ReaderService readerService, ReadingListMapper readingListMapper) {
         this.readingListRepository = readingListRepository;
         this.bookRepository = bookRepository;
+        this.readerRepository = readerRepository;
         this.readerService = readerService;
         this.readingListMapper = readingListMapper;
     }
 
     @Transactional
     @Override
-    public List<ReadingListDto> getReadingListsForReader(String jwtToken) {
-        Reader reader = readerService.getReaderFromToken(jwtToken);
+    public List<ReadingListDto> getReadingListsForReader(Long readerId) {
+        Reader reader = readerRepository.getReferenceById(readerId);
         List<ReadingList> readingLists = readingListRepository.findAllByReader(reader);
         List<ReadingListDto> readingListDtos = new ArrayList<>();
         for (ReadingList list : readingLists){
@@ -75,6 +79,10 @@ public class ReadingListServiceImpl implements ReadingListService {
     public void deleteReadingList(Long readingListId) {
         ReadingList readingList = readingListRepository.findById(readingListId)
                 .orElseThrow(() -> new IllegalArgumentException("Reading list not found"));
+
+        readingList.getBooks().clear();
+        readingListRepository.save(readingList);
+
         readingListRepository.delete(readingList);
     }
 

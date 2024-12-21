@@ -86,6 +86,46 @@ public class ReadingListServiceImpl implements ReadingListService {
         readingListRepository.delete(readingList);
     }
 
+    @Override
+    public ReadingListDto likeReadingList(String token, Long readingListId) {
+        ReadingList readingList = readingListRepository.findById(readingListId)
+                .orElseThrow(() -> new IllegalArgumentException("Reading List not found"));
+        Reader reader = readerService.getReaderFromToken(token);
+        if(readingList.getReader() == reader){
+            throw new IllegalArgumentException("Can't like your own reading list");
+        }
+        List<Reader> readerLikes = readingList.getReaderLikes();
+        if(!readerLikes.contains(reader)){
+            readerLikes.add(reader);
+        }
+        readingList.setReaderLikes(readerLikes);
+        readingListRepository.save(readingList);
+        return readingListMapper.toReadingListDto(readingList);
+    }
+
+    @Override
+    public ReadingListDto unlikeReadingList(String token, Long readingListId) {
+        ReadingList readingList = readingListRepository.findById(readingListId)
+                .orElseThrow(() -> new IllegalArgumentException("Reading List not found"));
+        Reader reader = readerService.getReaderFromToken(token);
+        if(readingList.getReader() == reader){
+            throw new IllegalArgumentException("Can't like your own reading list");
+        }
+        List<Reader> readerLikes = readingList.getReaderLikes();
+        readerLikes.remove(reader);
+        readingList.setReaderLikes(readerLikes);
+        readingListRepository.save(readingList);
+        return readingListMapper.toReadingListDto(readingList);
+    }
+
+    @Override
+    public Boolean isReadingListLiked(String token, Long readingListId) {
+        Reader reader = readerService.getReaderFromToken(token);
+        ReadingList readingList = readingListRepository.findById(readingListId)
+                .orElseThrow(() -> new IllegalArgumentException("Reading List not found"));
+        return readingList.getReaderLikes().contains(reader);
+    }
+
     private Set<Book> getAllBooksById(List<Long> bookIds){
         Set<Book> books = new HashSet<>();
         for (Long bookId :bookIds) {

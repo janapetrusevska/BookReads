@@ -102,7 +102,7 @@ const Filters = ({ onFilter }) => {
                     placeholder="Select points"
                     className="filter-column"
                     value={pointsOptions.find((option) => option.value === filters.points)}
-                    onChange={(selectedOption) => handleChange("points", selectedOption)}
+                    onChange={(selectedOption) => handleChange("points", selectedOption.value)}
                 />
                 <Select
                     name="stars"
@@ -110,7 +110,7 @@ const Filters = ({ onFilter }) => {
                     placeholder="Select stars"
                     className="filter-column"
                     value={starsOptions.find((option) => option.value === filters.stars)}
-                    onChange={(selectedOption) => handleChange("stars", selectedOption)}
+                    onChange={(selectedOption) => handleChange("stars", selectedOption.value)}
                 />
                 <div className="filter-column">
                     <label>From:</label>

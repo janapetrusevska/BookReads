@@ -4,7 +4,7 @@ import {fetchBooksByStatus} from "../Service/AxiosService";
 import {jwtDecode} from "jwt-decode";
 import {Carousel} from "react-responsive-carousel";
 
-const BookSectionByStatus = ({ title, description, status, onViewDetails }) => {
+const BookSectionByStatus = ({ title, description, status, onViewDetails, image, imageCss}) => {
     const [books, setBooks] = useState([]);
     const token = localStorage.getItem("token");
     const decoded = jwtDecode(token);
@@ -34,13 +34,20 @@ const BookSectionByStatus = ({ title, description, status, onViewDetails }) => {
     const bookChunks = splitBooks(books, 7);
 
     return (
-        <div>
+        <div className="book-section">
+            <div className="book-section-header">
+                <div>
+                    <h3>{title}</h3>
+                    <p>{description}</p>
+                </div>
+                {image && <img id={imageCss} src={image} alt="plant"/>}
+            </div>
             <div className="book-list-container">
-                <h3>{title}</h3>
-                <p>{description}</p>
                 <Carousel
                     showThumbs={true}
                     showArrows={true}
+                    autoPlay
+                    interval={6000}
                     useKeyboardArrows={true}
                     className="carousel-home-page"
                 >

@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const SearchBar = ({ onSelectBook }) => {
-    const [searchTerm, setSearchTerm] = useState(""); // Search input value
-    const [showSuggestions, setShowSuggestions] = useState(false); // To control suggestions visibility
-    const [bookSuggestions, setBookSuggestions] = useState([]); // Books fetched from API
+    const [searchTerm, setSearchTerm] = useState("");
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [bookSuggestions, setBookSuggestions] = useState([]);
     const searchContainerRef = useRef(null);
     const navigate = useNavigate();
 
@@ -57,7 +57,8 @@ const SearchBar = ({ onSelectBook }) => {
         const title = book.volumeInfo.title || "";
         const author = book.volumeInfo.authors[0] || "";
         const coverUrl = book.volumeInfo.imageLinks.smallThumbnail || "";
-        onSelectBook(title, author,coverUrl);
+        const genre = book.volumeInfo.categories[0] || "";
+        onSelectBook(title, author,coverUrl,genre);
         setSearchTerm("");
         setShowSuggestions(false);
     };
@@ -68,14 +69,14 @@ const SearchBar = ({ onSelectBook }) => {
         <div className="search-books-container" ref={searchContainerRef}>
             <input
                 type="text"
-                className="nav-search-bar"
+                className="nav-search-books"
                 placeholder="Search for a book..."
                 value={searchTerm}
                 onChange={handleInputChange}
                 onFocus={handleFocus}
             />
             {showSuggestions && bookSuggestions.length > 0 && (
-                <ul className="suggestions-list">
+                <ul className="books-suggestions-list">
                     {bookSuggestions.slice(0, 6).map((book) => {
                         const volumeInfo = book.volumeInfo;
                         return (

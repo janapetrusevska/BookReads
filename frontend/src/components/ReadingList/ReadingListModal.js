@@ -3,7 +3,7 @@ import ReadingListForm from "./Form/ReadingListForm";
 import ReadingListDetails from "./Details/ReadingListDetails";
 import HeartIcon from "./Icons/HeartIcon";
 
-const ReadingListModal = ({ show, handleClose, title, readingList, isLoggedInReader }) => {
+const ReadingListModal = ({ show, handleClose, title, readingList, isLoggedInReader, isEditing }) => {
     const [isLiked, setIsLiked] = useState(false);
 
     if (!show) {
@@ -15,6 +15,17 @@ const ReadingListModal = ({ show, handleClose, title, readingList, isLoggedInRea
     };
 
     return (
+        isEditing ? (
+            <div className="modal-backdrop">
+                <div className="modal-container-reading-list">
+                    <div className="modal-top-bar">
+                        <h2>{title ? title : readingList.title}</h2>
+                        <button className="close-modal" onClick={handleClose}>X</button>
+                    </div>
+                    <ReadingListForm readingList={readingList}/>
+                </div>
+            </div>
+        ) : (
         <div className="modal-backdrop">
             <div className="modal-container-reading-list">
                 <div className="modal-top-bar">
@@ -34,6 +45,7 @@ const ReadingListModal = ({ show, handleClose, title, readingList, isLoggedInRea
                 )}
             </div>
         </div>
+        )
     );
 };
 

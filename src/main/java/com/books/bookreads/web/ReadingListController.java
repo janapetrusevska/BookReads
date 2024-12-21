@@ -55,4 +55,28 @@ public class ReadingListController {
         readingListService.deleteReadingList(readingListId);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/{readingListId}/like")
+    public ResponseEntity<ReadingListDto> likeReadingList(@RequestHeader("Authorization") String token,
+                                                          @PathVariable Long readingListId){
+        token = token.substring(7);
+        ReadingListDto readingListDto = readingListService.likeReadingList(token,readingListId);
+        return ResponseEntity.ok(readingListDto);
+    }
+
+    @PutMapping("/{readingListId}/unlike")
+    public ResponseEntity<ReadingListDto> unlikeReadingList(@RequestHeader("Authorization") String token,
+                                                          @PathVariable Long readingListId){
+        token = token.substring(7);
+        ReadingListDto readingListDto = readingListService.unlikeReadingList(token,readingListId);
+        return ResponseEntity.ok(readingListDto);
+    }
+
+    @GetMapping("/{readingListId}/isLiked")
+    public ResponseEntity<Boolean> getIsReadingListLiked(@RequestHeader("Authorization") String jwtToken,
+                                                       @PathVariable Long readingListId){
+        String token = jwtToken.substring(7);
+        Boolean isLiked = readingListService.isReadingListLiked(token,readingListId);
+        return ResponseEntity.ok(isLiked);
+    }
 }

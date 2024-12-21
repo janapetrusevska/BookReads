@@ -12,5 +12,7 @@ public class ReadingListDto {
     private String description;
     private List<Long> books;
     private LocalDate dateCreated;
+    private Long numberOfLikes;
+    private List<Long> readerLikes;
 }
 

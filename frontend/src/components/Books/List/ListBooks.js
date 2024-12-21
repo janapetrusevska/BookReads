@@ -3,14 +3,17 @@ import BookCard from "../BookCard";
 import BookModal from "../BookModal";
 import {fetchBooks} from "../../Service/AxiosService";
 import Filters from "./Filters";
+import {useNavigate} from "react-router-dom";
+import Image from "../../../images/icons/plant2.png"
 
 const ListBooks = () => {
     const [showModal, setShowModal] = useState(false);
     const [allBooks, setAllBooks] = useState([]);
     const [filteredBooks, setFilteredBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState(null);
-    const [sortOption, setSortOption] = useState("title"); // Sort state
+    const [sortOption, setSortOption] = useState("title");
     const token = localStorage.getItem("token");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetch = async () => {
@@ -22,6 +25,8 @@ const ListBooks = () => {
                 } catch (error) {
                     console.log(error.message || "An error occurred");
                 }
+            } else {
+                navigate("/login");
             }
         };
         fetch();
@@ -85,11 +90,16 @@ const ListBooks = () => {
         <div className="home-container">
             <Filters onFilter={handleFilter} />
             <div className="book-list-container">
-                <h2>All your books in one place!</h2>
-                <p>
-                    Here you can look at all the books you have read, the ones you're enjoying
-                    right now, as well as everything that is on your wishlist.
-                </p>
+                <div className="book-list-container-header">
+                    <div>
+                        <h2>All your books in one place!</h2>
+                        <p>
+                            Here you can look at all the books you have read, the ones you're enjoying
+                            right now, as well as everything that is on your wishlist.
+                        </p>
+                    </div>
+                    <img id="books-list-image" src={Image} alt="image"/>
+                </div>
                 <div className="book-list">
                     {sortedBooks.map((book) => (
                         <BookCard

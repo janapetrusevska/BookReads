@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import ReadingListCard from "../ReadingListCard";
 import {fetchReadingLists} from "../../Service/AxiosService";
 
-const ReadingListSection = ({readerId, name, showModal, isLoggedInReader}) => {
+const ReadingListSection = ({readerId, name, showModal, showReadingListDetails, isLoggedInReader}) => {
     const [readingLists, setReadingLists] = useState([]);
     const token = localStorage.getItem("token");
 
@@ -22,7 +22,8 @@ const ReadingListSection = ({readerId, name, showModal, isLoggedInReader}) => {
     }, [token, readerId]);
 
     const handleOnViewDetails = (list) => {
-        showModal(list);
+        showReadingListDetails(list);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     const handleShowForm = () => {
@@ -33,11 +34,11 @@ const ReadingListSection = ({readerId, name, showModal, isLoggedInReader}) => {
         <div>
             <div className="reading-list-title">
                 <div>
-                    <h2>Reading Lists</h2>
+                    <h2>Book Collections</h2>
                     {
                         readingLists.length > 0 ?
-                            <p>Take a look at all of {name}'s reading lists.</p> :
-                            <p>{name} hasn't created any reading lists yet.</p>
+                            <p>Take a look at all of {name}'s book collections.</p> :
+                            <p>{name} hasn't created any book collections yet.</p>
                     }
                 </div>
                 <div>

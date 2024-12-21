@@ -40,12 +40,14 @@ const BookDetails = ({ book, isLoggedInReader }) => {
                 <BookForm book={book} closeForm={() => setIsEditing(false)} />
             ) : (
                 <div className="modal-form-container">
-                    <div className="left-column">
+                    <div className="left-column-details">
                         <img src={book.coverUrl} alt="book cover" className="details-book-cover" />
-                        <div className="speechbubble">
-                            <p>{book.note}</p>
-                            <span className="username">{book.username}</span>
-                        </div>
+                        {book.note &&
+                            <div className="speechbubble">
+                                <p>{book.note}</p>
+                                <span className="username">{book.username}</span>
+                            </div>
+                        }
                     </div>
                     <div className="right-column-details">
                         <div className="details-title">
@@ -57,17 +59,22 @@ const BookDetails = ({ book, isLoggedInReader }) => {
                                 <img key={index} src={Star} alt="star" width="40px" height="40px"/>
                             ))
                         }
-                        <p><strong>Genre:</strong> {book.genre}</p>
-                        <p><strong>Language:</strong> {book.language}</p>
-                        <p><strong>Points:</strong> {book.points}</p>
-
-                        {book.status === "READING" ? (
-                            <p><strong><i>CURRENTLY READING</i></strong></p>
-                        ) : book.status === "READ" ? (
-                            <p><strong><i>READ ON {book.readDate}</i></strong></p>
-                        ) : (
-                            <p><strong><i>ON WISHLIST</i></strong></p>
-                        )}
+                        <div className="details-other-info">
+                            <div className="details-other-info-column">
+                                <p><strong>Genre:</strong> {book.genre}</p>
+                                <p><strong>Language:</strong> {book.language}</p>
+                            </div>
+                            <div className="details-other-info-column">
+                                <p><strong>Points:</strong> {book.points}</p>
+                                {book.status === "READING" ? (
+                                    <p><strong><i>CURRENTLY READING</i></strong></p>
+                                ) : book.status === "READ" ? (
+                                    <p><strong><i>READ: </i></strong>{book.readDate}</p>
+                                ) : (
+                                    <p><strong><i>ON WISHLIST</i></strong></p>
+                                )}
+                            </div>
+                        </div>
                     </div>
                     { isLoggedInReader ?
                         <div className="button-container">

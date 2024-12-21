@@ -259,6 +259,36 @@ export const createOrUpdateReadingList = async (readingListData, token, isEditMo
     }
 };
 
+export const likeReadingList = async (readingListId, token) => {
+    setAuthorizationHeader(token);
+    try{
+        const response = await axiosInstance.put(`readingList/${readingListId}/like`);
+        return response.data;
+    } catch (error){
+        throw new Error('Error liking a reading list:' + error.message);
+    }
+}
+
+export const unlikeReadingList = async (readingListId, token) => {
+    setAuthorizationHeader(token);
+    try{
+        const response = await axiosInstance.put(`readingList/${readingListId}/unlike`);
+        return response.data;
+    } catch (error){
+        throw new Error('Error unliking a reading list:' + error.message);
+    }
+}
+
+export const fetchIsReadingListLiked = async (readingListId, token) => {
+    setAuthorizationHeader(token);
+    try {
+        const response = await axiosInstance.get(`/readingList/${readingListId}/isLiked`);
+        return response.data;
+    } catch (error) {
+        throw new Error('Error fetching is reading list liked: ' + error.message);
+    }
+};
+
 export const fetchIsReaderFollowed = async (isFollowed, token) => {
     setAuthorizationHeader(token);
     try {
@@ -268,6 +298,57 @@ export const fetchIsReaderFollowed = async (isFollowed, token) => {
         throw new Error('Error fetching followed reader: ' + error.message);
     }
 };
+
+export const fetchAllCommentsForReadingList = async (readingListId) => {
+    try{
+        const response = await axiosInstance.get(`/comment/${readingListId}`);
+        return response.data;
+    } catch (error) {
+        throw new Error('Error fetching comments for reading list: ' + error.message);
+    }
+}
+
+export const addComment = async (readingListId,commentText,token) => {
+    setAuthorizationHeader(token);
+    try{
+        const response = await axiosInstance.post(
+            `/comment/${readingListId}/add`,
+            commentText,
+            {
+                headers: {
+                    "Content-Type": "text/plain",
+                },
+            }
+        );
+        return response.data;
+    } catch (error){
+        throw new Error('Error adding a comment for user: ' + error.message);
+    }
+}
+
+export const editComment = async (commentId,content,token) => {
+    setAuthorizationHeader(token);
+    try{
+        const response = await axiosInstance.put(`comment/edit/${commentId}`,content,
+            {
+                headers:{
+                    "Content-Type":"text/plain",
+                },
+            });
+        return response.data;
+    } catch (error){
+        throw new Error('Error editing a comment: ' + error.message);
+    }
+}
+
+export const deleteComment = async (commentId, token) => {
+    setAuthorizationHeader(token);
+    try{
+        await axiosInstance.delete(`comment/delete/${commentId}`)
+    } catch (error){
+        throw new Error('Error deleting a comment: ' + error.message);
+    }
+}
 
 export const followReader = async (followingId, token) => {
     setAuthorizationHeader(token);

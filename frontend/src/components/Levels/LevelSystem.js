@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {jwtDecode} from "jwt-decode";
 import {fetchReaderProfile} from "../Service/AxiosService";
+import {useNavigate} from "react-router-dom";
 
 const LevelSystem = () => {
     const levels = Array.from({ length: 50 }, (_, index) => index + 1);
@@ -9,6 +10,7 @@ const LevelSystem = () => {
     const token = localStorage.getItem("token");
     const decodedToken = jwtDecode(token);
     const readerId = decodedToken.readerId;
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -21,6 +23,7 @@ const LevelSystem = () => {
                 }
             } else {
                 setError("No token found");
+                navigate("/login");
             }
         };
 

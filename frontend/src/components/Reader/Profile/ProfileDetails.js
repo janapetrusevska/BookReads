@@ -11,6 +11,7 @@ const ProfileDetails = ({
                             handleLogout,
                             calculateLevelThreshold,
                             isFollowed,
+                            handleIsFollowed
                         }) => {
     const isLoggedInReader = Number(readerId) === Number(readerInToken);
 
@@ -18,6 +19,7 @@ const ProfileDetails = ({
         if (!isLoggedInReader) {
             try {
                 await followReader(readerId, token);
+                handleIsFollowed(true);
             } catch (error) {
                 console.error("Failed to follow reader:", error.message);
             }
@@ -28,6 +30,8 @@ const ProfileDetails = ({
         if (!isLoggedInReader) {
             try {
                 await unfollowReader(readerId, token);
+                handleIsFollowed(false);
+
             } catch (error) {
                 console.error("Failed to unfollow reader:", error.message);
             }
@@ -43,6 +47,17 @@ const ProfileDetails = ({
 
     return (
         <div className="profile-details">
+            { !isLoggedInReader ? (
+                isFollowed ? (
+                    <button className="unfollow-button" onClick={handleUnfollow}>
+                        UNFOLLOW READER
+                    </button>
+                ) : (
+                    <button className="follow-button" onClick={handleFollow}>
+                        FOLLOW READER
+                    </button>
+                )) : <></>
+            }
             <h1>{reader.name}</h1>
             <h3>{reader.email}</h3>
             <div className="progress-levels">
@@ -60,15 +75,7 @@ const ProfileDetails = ({
             <p>Books entered: {reader.booksRead}</p>
             <p>Total points: {reader.totalPoints}</p>
             {!isLoggedInReader ? (
-                isFollowed ? (
-                    <button className="unfollow-button" onClick={handleUnfollow}>
-                        UNFOLLOW READER
-                    </button>
-                ) : (
-                    <button className="follow-button" onClick={handleFollow}>
-                        FOLLOW READER
-                    </button>
-                )
+                <></>
             ) : (
                 <div style={{ display: "flex", gap: "10px" }}>
                     <button className="profile-button" onClick={handleEditProfile}>

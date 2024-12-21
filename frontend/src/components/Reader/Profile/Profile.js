@@ -11,12 +11,14 @@ import ReadingListModal from "../../ReadingList/ReadingListModal";
 import { useParams, useNavigate } from "react-router-dom";
 import ProfileDetails from "./ProfileDetails";
 import ProfileEditForm from "./ProfileEditForm";
+import ReadingListDetails from "../../ReadingList/Details/ReadingListDetails";
 
 
 const Profile = () => {
     const { readerId } = useParams();
     const [reader, setReader] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [showReadingListDetails, setShowReadingListDetails] = useState(false);
     const [selectedReadingList, setSelectedReadingList] = useState(null);
     const [isFollowed, setIsFollowed] = useState(false);
     const [isEditProfile, setIsEditProfile] = useState(false);
@@ -29,32 +31,23 @@ const Profile = () => {
 
     console.log("readerId from URL:", readerId);
     console.log("readerId from token:", readerInToken);
+    console.log("is logged", isLoggedInReader);
 
-
-    const calculateLevelThreshold = (level) => {
-        if (level <= 10) return level * 10;
-        if (level <= 20) return 100 + (level - 10) * 15;
-        if (level <= 30) return 250 + (level - 20) * 20;
-        if (level <= 40) return 450 + (level - 30) * 25;
-        if (level <= 50) return 700 + (level - 40) * 30;
-        return 1000;
-    };
-
-    const isTokenExpired = (token) => {
-        const decoded = jwtDecode(token);
-        return decoded.exp * 1000 < Date.now();
-    };
+    useEffect(() => {
+        setShowReadingListDetails(false);
+        setSelectedReadingList(null);
+        setIsEditProfile(false);
+    }, [readerId]);
 
     useEffect(() => {
         const loadProfile = async () => {
+            setReader(null);
             if (!token) {
-                console.log("No token found. Please log in.");
                 navigate("/login");
                 return;
             }
 
             if (isTokenExpired(token)) {
-                console.log("Token expired. Please log in again.");
                 localStorage.removeItem("token");
                 navigate("/login");
                 return;
@@ -64,7 +57,7 @@ const Profile = () => {
                 const profileInfo = await fetchReaderProfile(token, readerId);
                 setReader(profileInfo);
             } catch (err) {
-                console.log(err.message || "An error occurred");
+                console.error(err.message || "An error occurred");
             }
         };
 
@@ -81,7 +74,28 @@ const Profile = () => {
 
         fetchIsFollowed();
         loadProfile();
+    }, [readerId, isFollowed]);
+
+    useEffect(() => {
+        if (showModal) {
+            setShowModal(false);
+            setSelectedReadingList(null);
+        }
     }, [readerId]);
+
+    const calculateLevelThreshold = (level) => {
+        if (level <= 10) return level * 10;
+        if (level <= 20) return 100 + (level - 10) * 15;
+        if (level <= 30) return 250 + (level - 20) * 20;
+        if (level <= 40) return 450 + (level - 30) * 25;
+        if (level <= 50) return 700 + (level - 40) * 30;
+        return 1000;
+    };
+
+    const isTokenExpired = (token) => {
+        const decoded = jwtDecode(token);
+        return decoded.exp * 1000 < Date.now();
+    };
 
     const handleLogout = async () => {
         try {
@@ -107,35 +121,55 @@ const Profile = () => {
         setIsEditProfile(true);
     }
 
+    const handleShowReadingListDetails = (list) => {
+        setShowReadingListDetails(true);
+        setSelectedReadingList(list);
+    }
+
+    const handleIsFollowedButton = (followed) => {
+        if(followed){
+            setIsFollowed(true)
+        } else setIsFollowed(false);
+    }
+
     return (
         <div className="profile-container">
             {reader ? (
                 <>
                     {!isEditProfile ? (
-                        <>
-                            <ProfileDetails
-                                reader={reader}
-                                readerId={readerId}
-                                readerInToken={readerInToken}
-                                token={token}
-                                handleEditProfile={handleEditProfile}
-                                handleLogout={handleLogout}
-                                calculateLevelThreshold={calculateLevelThreshold}
-                                isFollowed={isFollowed}
-                            />
-                        </>
-                    ) : (
-                        <ProfileEditForm reader={reader}/>
-                    )}
-                    <div className="profile-reading-section">
-                        <BooksCarousel readerId={reader.id} isLoggedInReader={isLoggedInReader}/>
-                        <ReadingListSection
-                            readerId={reader.id}
-                            name={reader.name}
-                            showModal={handleShowModal}
-                            isLoggedInReader={isLoggedInReader}
+                        <ProfileDetails
+                            reader={reader}
+                            readerId={readerId}
+                            readerInToken={readerInToken}
+                            token={token}
+                            handleEditProfile={() => setIsEditProfile(true)}
+                            handleLogout={handleLogout}
+                            calculateLevelThreshold={calculateLevelThreshold}
+                            isFollowed={isFollowed}
+                            handleIsFollowed={handleIsFollowedButton}
                         />
-                    </div>
+                    ) : (
+                        <ProfileEditForm reader={reader} />
+                    )}
+                    {showReadingListDetails && selectedReadingList ? (
+                        <ReadingListDetails
+                            readingList={selectedReadingList}
+                            isLoggedInReader={isLoggedInReader}
+                            readerName={reader.name}
+                            handleGoBack={() => setShowReadingListDetails(false)}
+                        />
+                    ) : (
+                        <div className="profile-reading-section">
+                            <BooksCarousel readerId={reader?.id} isLoggedInReader={isLoggedInReader} />
+                            <ReadingListSection
+                                readerId={reader?.id}
+                                name={reader?.name}
+                                showModal={handleShowModal}
+                                showReadingListDetails={handleShowReadingListDetails}
+                                isLoggedInReader={isLoggedInReader}
+                            />
+                        </div>
+                    )}
                     <ReadingListModal
                         show={showModal}
                         handleClose={handleCloseModal}

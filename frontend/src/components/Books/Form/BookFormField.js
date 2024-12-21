@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-import ImageModal from "../BookDetails/ImageModal";
+import React from "react";
 
 const FormField = ({
                    label,
@@ -14,19 +13,15 @@ const FormField = ({
                    bookCover,
                    required,
                    rows,
-                   cols}) => {
-    const [showModal, setShowModal] = useState(false);
+                   cols,
+                   imageShow}) => {
 
-    const handleViewCover = () => {
-        console.log("Opening modal");
-        setShowModal(true);
+    const handleViewCover = (e) => {
+        e.preventDefault();
+        if(imageShow){
+            imageShow(true);
+        }
     };
-
-    const handleCloseModal = () => {
-        console.log("Closing modal");
-        setShowModal(false);
-    };
-
     if (type === "select") {
         return (
             <div className="form-field-add">
@@ -52,6 +47,8 @@ const FormField = ({
         );
     }
 
+    console.log(bookCover);
+
     if (type === "file") {
         return (
             <>
@@ -60,21 +57,19 @@ const FormField = ({
                     <div className="form-field-file-add-content">
                         <input
                             type="file"
-                            name={name}
+                            name={bookCover ? bookCover : name}
                             accept="image/*"
                             onChange={onChange}
                         />
                         {bookCover && (
                             <div className="cover-notification">
                                 <button className="view-button" onClick={handleViewCover}>
-                                    <b>VIEW</b>
+                                    <b>VIEW COVER</b>
                                 </button>
                             </div>
                         )}
                     </div>
                 </div>
-
-                {showModal && <ImageModal imageUrl={bookCover} onClose={handleCloseModal} />}
             </>
         );
     }

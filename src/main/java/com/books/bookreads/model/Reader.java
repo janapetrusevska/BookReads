@@ -62,6 +62,9 @@ public class Reader implements UserDetails {
     @ManyToMany(mappedBy = "following")
     private Set<Reader> followers = new HashSet<>();
 
+    @ManyToMany(mappedBy = "readerLikes")
+    private List<ReadingList> likedReadingLists;
+
     public Reader() {
         this.level = 1;
         this.dateCreated = LocalDate.now();

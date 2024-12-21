@@ -3,12 +3,15 @@ import BookSectionByStatus from "./BookSectionByStatus";
 import BookModal from "../Books/BookModal";
 import WelcomePage from "./WelcomePage";
 import {jwtDecode} from "jwt-decode";
+import Image1 from "../../images/icons/image1.png";
+import Image2 from "../../images/icons/plant4.png";
+import Image3 from "../../images/icons/image2.png"
 
 const HomePage = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedBook, setSelectedBook] = useState(null);
-    const [isTokenExpired, setIsTokenExpired] = useState(false);
-    console.log(isTokenExpired);
+    const token = localStorage.getItem("token");
+    const [isTokenExpired, setIsTokenExpired] = useState(!token);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -60,6 +63,8 @@ const HomePage = () => {
                         status="READING"
                         onAddBook={() => handleOpenModal(null)}
                         onViewDetails={handleOpenModal}
+                        image={Image1}
+                        imageCss="carousel-image-1"
                     />
                     <BookSectionByStatus
                         title="Already read"
@@ -67,6 +72,8 @@ const HomePage = () => {
                         status="READ"
                         onAddBook={() => handleOpenModal(null)}
                         onViewDetails={handleOpenModal}
+                        image={Image2}
+                        imageCss="carousel-image-2"
                     />
                     <BookSectionByStatus
                         title="Wishlist"
@@ -74,6 +81,8 @@ const HomePage = () => {
                         status="WISHLIST"
                         onAddBook={() => handleOpenModal(null)}
                         onViewDetails={handleOpenModal}
+                        image={Image3}
+                        imageCss="carousel-image-3"
                     />
                     <BookModal
                         show={showModal}

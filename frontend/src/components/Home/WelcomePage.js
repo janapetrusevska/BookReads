@@ -16,7 +16,8 @@ const WelcomePage = () => {
         <div className="welcome-container">
             <div className="welcome-text">
                 <h1>SHELF-CONNECT</h1>
-                <h3>Join now to build your own library, track your reading, and connect with other book lovers.</h3>
+                <h2>Read, Track and Share!</h2>
+                <h3>Curate your own virtual library, create unique book collections, and earn points as you explore captivating stories and engage with a community of passionate book lovers.</h3>
                 <button onClick={handleLogin} className="welcome-button">LOG IN</button>
                 <p>Don’t have a profile yet? <Link to="/register" className="register-link">JOIN US</Link> NOW</p>
             </div>

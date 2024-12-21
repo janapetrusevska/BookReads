@@ -14,6 +14,15 @@ const SearchBar = ({ onSearch, suggestions }) => {
         };
     }, []);
 
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            onSearch(searchTerm);
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchTerm]);
+
+
     const handleInputChange = (event) => {
         const term = event.target.value;
         setSearchTerm(term);
@@ -44,7 +53,7 @@ const SearchBar = ({ onSearch, suggestions }) => {
             <input
                 type="text"
                 className="nav-search-bar"
-                placeholder="Search by name or email..."
+                placeholder="Search readers by name or email..."
                 value={searchTerm}
                 onChange={handleInputChange}
                 onFocus={handleFocus}

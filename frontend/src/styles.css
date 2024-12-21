@@ -60,11 +60,35 @@ body {
     border-radius: 8px;
     border: #333333 0 solid;
     box-shadow: inset 0 2px 4px 2px rgba(0, 0, 0, 0.4);
-
 }
 
 .search-books-container{
     display: flex;
+}
+
+.nav-search-books{
+    width: 700px;
+    height: 10%;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: #333333 0 solid;
+    box-shadow: inset 0 2px 4px 2px rgba(0, 0, 0, 0.4);
+}
+
+.books-suggestions-list {
+    position: absolute;
+    width: 720px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #4C1968;
+    z-index: 9999;
+    list-style: none;
+    padding: 0;
+    margin: 40px 0 0;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .search-container {
@@ -87,7 +111,7 @@ body {
     z-index: 9999;
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 40px 0 0;
     max-height: 200px;
     overflow-y: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -117,19 +141,21 @@ body {
 .welcome-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background-image: url('./images/wall1.png');
+    align-items: flex-start;
+    justify-content: center;
+    background-image: url('./images/icons/wall-org2.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: calc(100vh - 67px);
+    height: calc(100vh - 81px);
     color: #181818;
-    text-align: center;
+    text-align: left;
     gap: 15px;
 }
 
 .welcome-text{
-    margin: 50px;
+    margin: -50px 50px 50px 750px;
+    max-width: 830px;
 }
 
 .welcome-container h1 {
@@ -140,11 +166,22 @@ body {
     line-height: 1.2;
 }
 
+.welcome-container h2 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 0.3em;
+    line-height: 1.2;
+}
+
 .welcome-container h3 {
-    font-size: 30px;
+    font-size: 24px;
     font-weight: 400;
     color: #666;
     line-height: 1.4;
+}
+
+.welcome-container p {
+    color: #666;
 }
 
 .welcome-button {
@@ -218,6 +255,7 @@ body {
     font-size: 18px;
     outline: 2px solid #884CA0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-family: "Arial", serif ;
 }
 
 .form-button {
@@ -298,9 +336,11 @@ body {
 
 .profile-details{
     width: 50%;
+    max-width: 450px;
     min-height: inherit;
     box-sizing: border-box;
     padding: 50px;
+    margin-top: -30px;
     color: white;
     background-color: rgba(104, 67, 119, 0.7);
     box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -352,7 +392,7 @@ body {
 }
 
 .profile-reading-section{
-    width: 100%;
+    width: 93%;
     padding: 50px;
 }
 .progress-levels{
@@ -417,6 +457,12 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     min-height: 300px;
     width: 200px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.book-card:hover{
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
 }
 
 .book-card li {
@@ -457,9 +503,67 @@ body {
     flex-wrap: wrap;
 }
 
+.book-section{
+    display: flex;
+    flex-direction: column;
+}
+
+.book-section-header{
+    display: flex;
+    justify-content: space-between;
+    max-height: 150px;
+}
+
+.book-section-header div{
+    flex-direction: column;
+}
+
+#carousel-image-1{
+    display: flex;
+    position: relative;
+    top: 70px;
+    right: -25px;
+    width: 300px;
+    height: 150px;
+    z-index: 10;
+}
+
+#carousel-image-2{
+    display: flex;
+    position: relative;
+    right: -25px;
+    width: 250px;
+    height: 350px;
+    z-index: 10;
+}
+
+#carousel-image-3{
+    display: flex;
+    position: relative;
+    top: -40px;
+    right: 20px;
+    width: 250px;
+    height: 350px;
+    z-index: 10;
+}
+
 .book-list-container {
     padding-top: 20px;
     overflow-y: auto;
+}
+
+.book-list-container-header{
+    display: flex;
+    justify-content: space-between;
+    max-height: 150px;
+}
+
+#books-list-image{
+    width: 300px;
+    height: 350px;
+    display: flex;
+    position: relative;
+    top: -80px;
 }
 
 .search-bar{
@@ -587,11 +691,23 @@ body {
     z-index: 100;
 }
 
-.left-column,
+.left-column{
+    flex: 1;
+    min-width: 300px;
+    max-width: 350px;
+    margin: 10px;
+}
 .right-column {
     flex: 1;
     min-width: 300px;
     max-width: 350px;
+    margin: 10px;
+}
+
+.left-column-details{
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
     margin: 10px;
 }
 
@@ -605,9 +721,17 @@ body {
 
 .right-column-details{
     flex: 1;
-    min-width: 300px;
-    max-width: 350px;
+    min-width: 380px;
+    max-width: 420px;
     margin: -30px 10px 10px 10px;
+}
+
+.details-other-info{
+    display: flex;
+}
+
+.details-other-info-column{
+    padding: 10px;
 }
 
 @media (max-width: 600px) {
@@ -627,21 +751,34 @@ body {
     width: 90%;
 }
 
-.form-field-add input,
 .form-field-add select{
     width:100%;
+    height: 44px;
+    border: 1px solid #545454;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    padding-left: 5px;
+}
+
+.form-field-add input {
+    width:98%;
     height: 40px;
     border: 1px solid #545454;
     border-radius: 6px;
     font-size: 16px;
     transition: border-color 0.3s ease;
+    font-family: "Arial", serif ;
+    padding-left: 5px;
 }
+
 
 .form-field-add input:focus,
 .form-field-add select:focus,
 .form-field-add textarea:focus {
     border-color: #4C1968;
     outline: none;
+    font-family: "Arial", serif ;
 }
 
 .form-field-add textarea {
@@ -649,6 +786,8 @@ body {
     min-height: 80px;
     resize: vertical;
     border-radius: 6px;
+    font-family: "Arial", serif ;
+    padding-left: 5px;
 }
 
 .cover-upload-row {
@@ -683,7 +822,7 @@ body {
 .toggle-switch {
     margin-left: 10px;
     position: relative;
-    width: 300px;
+    width: 320px;
     display: inline-block;
     vertical-align: middle;
     user-select: none;
@@ -727,7 +866,7 @@ body {
 .toggle-switch-inner:before {
     content: "Switch to upload file";
     text-transform: uppercase;
-    padding-left: 10px;
+    padding-left: 5px;
     background-color: #884CA0;
     color: #fff;
 }
@@ -749,7 +888,7 @@ body {
     position: absolute;
     top: 0;
     bottom: 0;
-    right: 66%;
+    right: 68%;
     border: 0 solid #bbb;
     border-radius: 20px;
     transition: all 0.3s ease-in 0s;
@@ -804,7 +943,8 @@ body {
 
 .speechbubble {
     position: relative;
-    max-width: 480px;
+    min-width: 700px;
+    max-height: 200px;
     background-color: #fff;
     padding: 40px 24px;
     font-size: 16px;
@@ -822,6 +962,20 @@ body {
     border: 12px solid transparent;
     border-top: none;
     border-bottom-color: #fff;
+    filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.1));
+}
+
+.speechbubble.left::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -10px;
+    top: 20px;
+    border: 12px solid transparent;
+    border-top: none;
+    border-left-color: #fff;
+    transform: rotate(-0.12turn);
     filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.1));
 }
 
@@ -862,16 +1016,15 @@ body {
 }
 
 .close-button {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 15px;
+    right: 15px;
     background-color: #fff;
     border: none;
-    padding: 5px 10px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 15px;
 }
 
 
@@ -945,8 +1098,9 @@ body {
 .reading-list-card{
     margin: 10px 18px;
     width: 300px;
-    height: 450px;
+    height: 600px;
     border-radius: 15px;
+    background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -977,6 +1131,13 @@ body {
     align-items: center;
 }
 
+.reading-list-buttons{
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .circle-button {
     width: 60px;
     height: 60px;
@@ -997,14 +1158,69 @@ body {
     justify-content: space-between;
     width: 85%;
 }
-.book-card-reading-list{
+
+.books-container-reading-list-details{
+    width: 85%;
+    padding: 20px;
+    margin: 0 20px;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.book-card-reading-list-photo{
+.books-container-reading-list-header{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.books-container-reading-text{
+    width: 88%;
+}
+
+.book-card-reading-list {
+    display: flex;
+    position: relative;
+}
+
+.book-card-reading-list-photo {
     position: relative;
     padding: 20px;
+    width: 150px;
 }
+
+.book-card-reading-list-info {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    flex-grow: 1;
+    max-width: 350px;
+    position: relative;
+}
+
+.book-card-reading-list-note {
+    display: none;
+    position: absolute;
+    margin-left: 10px;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #fff;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    min-width: 350px;
+    max-width: 500px;
+    min-height: 100px;
+}
+
+.book-card-reading-list:hover .book-card-reading-list-note {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 /*Book Carousel*/
 .carousel{
@@ -1031,7 +1247,7 @@ body {
 }
 
 .reading-list-select-field{
-    width: 85%;
+    width: 90%;
 }
 
 .carousel .slide {
@@ -1085,6 +1301,7 @@ body {
 /*Stars*/
 .stars-container{
     width: 310px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1106,14 +1323,141 @@ body {
     transform: scale(1.2);
 }
 
+.likes-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.likes-container p{
+    margin-top: 5px;
+}
+
 .heart-icon {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
+    padding: 0 5px;
     cursor: pointer;
-    margin-right: 50px;
     transition: transform 0.2s;
 }
 
 .heart-icon:hover {
     transform: scale(1.2);
+}
+
+/* Comments */
+.comment {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: white;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    border-left: #884CA0 5px solid;
+}
+
+.comment-info{
+    width: 90%;
+}
+
+.comment .username {
+    font-weight: bold;
+    font-size: 20px;
+    color: #333;
+}
+
+.comment .timestamp {
+    font-size: 16px;
+    color: #888;
+    margin-top: 5px;
+    display: block;
+}
+
+.comment .text {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #555;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.comment-textarea {
+    width: 98%;
+    height: 80px;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    resize: none;
+    border: none;
+    margin-bottom: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    border-left: #884CA0 5px solid;
+    color: #333;
+    font-family: "Arial", serif ;
+}
+
+.comment-textarea:focus {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    border-left: #884CA0 5px solid;
+    font-family: "Arial", serif ;
+}
+
+.comment-edit-textarea{
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    font-size: 18px;
+    resize: none;
+    margin: 5px;
+    background-color: #fff;
+    border: #1a1a1a 1px solid;
+    color: #333;
+    font-family: "Arial", serif ;
+}
+
+.comment-edit-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.comment-edit-btn{
+    width: 100%;
+    margin: 10px;
+    padding: 10px;
+}
+
+.comment-btn-container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.comment-btn {
+    background-color: #4C1968;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 20%;
+}
+
+.comment-btn:hover {
+    background-color: #884CA0;
+}
+
+.comment-icon-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-icon{
+    width: 30px;
+    height: 30px;
+    padding: 10px;
 }

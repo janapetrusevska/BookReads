@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,7 +24,14 @@ public class ReadingList {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String description;
-    private int likes;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "READING_LIST_LIKES",
+            joinColumns = @JoinColumn(name = "LIST_ID"),
+            inverseJoinColumns = @JoinColumn(name = "READER_ID")
+    )
+    private List<Reader> readerLikes;
 
     @ManyToOne
     @JoinColumn(name = "READER_ID",nullable = false)
@@ -44,7 +52,6 @@ public class ReadingList {
     public ReadingList(String title, String description) {
         this.title = title;
         this.description = description;
-        this.likes=0;
         this.dateCreated = LocalDate.now();
     }
 

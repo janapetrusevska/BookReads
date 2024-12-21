@@ -3,7 +3,7 @@ import FormField from "../../Books/Form/BookFormField";
 import Select from 'react-select'
 import {createOrUpdateReadingList, fetchBooks} from "../../Service/AxiosService";
 
-const ReadingListForm = ({readingList}) => {
+const ReadingListForm = ({readingList }) => {
     const [books, setBooks] = useState([]);
     const [formData, setFormData] = useState({
         title: '',
@@ -91,7 +91,7 @@ const ReadingListForm = ({readingList}) => {
                 />
             </div>
             <FormField label="Description" name="description" type="textarea"
-                       value={formData.description} rows={10} cols={82} onChange={handleChange} />
+                       value={formData.description} rows={10} cols={87} onChange={handleChange} />
             <button type="submit" className="form-button">
                 <b>{isEditMode ? "UPDATE READING LIST" : "CREATE READING LIST"}</b>
             </button>
